@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 08:19:06 by abessa-m          #+#    #+#              #
-#    Updated: 2025/02/10 08:58:51 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/02/10 11:34:45 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,14 +15,15 @@ NAME-BONUS	:= fdf
 LIBFT		:= libft/libft.a mlx_linux/libmlx_Linux.a
 #################################################################### Compiler  #
 CC			:= cc
-CFLAGS		:= -g  -Wall -Wextra #-Werror
+CFLAGS		:= -g -lm -Wall -Wextra -Werror
 ########################################################## Intermidiate steps  #
 RM			:= rm -f
 AR			:= ar rcs
 ######################################################### Objects and Headers  #
 HEADERS		= fdf.h
 SRCS		= \
-	mini_lib_x.c
+	fdf.c \
+	fdf-input.c 
 OBJS		= $(SRCS:.c=.o)
 SRCS-BONUS		= 
 OBJS-BONUS		= $(SRCS-BONUS:.c=.o)
@@ -53,10 +54,9 @@ clean:
 
 fclean: clean
 	@make --no-print-directory -C libft/ fclean \
-	&& make --no-print-directory -C mlx_linux/  fclean \
 	&& $(RM) $(NAME) $(NAME-BONUS)
 
-re: fclean all	
+re: fclean all
 	@echo "$(GRAY)redone$(COR)"
 ####################################################################### Colors #
 COR = \033[0m# COlor Remove
