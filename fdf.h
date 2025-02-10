@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 09:56:50 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/10 16:14:14 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/10 20:03:35 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,20 @@ typedef struct s_data
 	int		line_length;
 	int		endian;
 }			t_data;
+
+typedef struct s_point
+{
+	int	x;
+	int	y;
+	int	z;
+}		t_point;
+
+typedef struct s_fdf
+{
+	void	*mlx;
+	void	*mlx_window;
+	t_data	img;
+}			t_fdf;
 
 //fdf-input.c
 int	input_validation(int argc, char **argv);
