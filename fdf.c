@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:37:00 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/10 13:45:17 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/10 16:13:52 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,12 +19,6 @@
 
 int	main(int argc, char **argv)
 {
-	int	**map;
-
-	if (input_validation(argc, argv) != 1)
+	if ((input_validation(argc, argv) != 1) || (read_map(argv[1]) == -1))
 		return (1);
-	if (cos(0))
-		ft_printf("It's working!\n");
-	if (read_map(argv[1], map) == -1)
-		return (ft_printf("Error openning the map file!\n"), 2);
 }
