@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 08:19:06 by abessa-m          #+#    #+#              #
-#    Updated: 2025/02/10 11:34:45 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/02/10 13:35:43 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME-BONUS	:= fdf
 LIBFT		:= libft/libft.a mlx_linux/libmlx_Linux.a
 #################################################################### Compiler  #
 CC			:= cc
-CFLAGS		:= -g -lm -Wall -Wextra -Werror
+CFLAGS		:= -g -lm -Wall -Wextra #-Werror
 ########################################################## Intermidiate steps  #
 RM			:= rm -f
 AR			:= ar rcs
@@ -23,7 +23,7 @@ AR			:= ar rcs
 HEADERS		= fdf.h
 SRCS		= \
 	fdf.c \
-	fdf-input.c 
+	fdf-input.c fdf-map.c 
 OBJS		= $(SRCS:.c=.o)
 SRCS-BONUS		= 
 OBJS-BONUS		= $(SRCS-BONUS:.c=.o)

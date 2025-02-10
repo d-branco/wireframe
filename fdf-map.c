@@ -1,30 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf.c                                              :+:      :+:    :+:   */
+/*   fdf-map.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/10 10:37:00 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/10 13:45:17 by abessa-m         ###   ########.fr       */
+/*   Created: 2025/02/10 11:54:23 by abessa-m          #+#    #+#             */
+/*   Updated: 2025/02/10 13:45:02 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-	//int offset = (y * line_length + x * (bits_per_pixel / 8));
-
-//usage
-//	valgrind -s --quiet ./fdf test_maps/42.fdf
-
-int	main(int argc, char **argv)
+int	read_map(char *map_file, int **map)
 {
-	int	**map;
+	char	*line;
+	int		map_file_fd;
 
-	if (input_validation(argc, argv) != 1)
-		return (1);
-	if (cos(0))
-		ft_printf("It's working!\n");
-	if (read_map(argv[1], map) == -1)
-		return (ft_printf("Error openning the map file!\n"), 2);
+	map_file_fd = open(map_file, O_RDONLY, 0644);
+	if (map_file_fd == -1)
+		return (-1);
+	line = get_next_line(map_file_fd);
+	if (!line)
+		return (ft_printf("Error reading map file!\n"), 1);
+	while (line)
+	{
+		ft_putstr_fd(line, 1); //remove
+		free(line);
+		line = get_next_line(map_file_fd);
+	}
+	free(line);
+	close(map_file_fd);
+	return (0);
 }

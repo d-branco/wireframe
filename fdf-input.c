@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:18:05 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/10 11:28:32 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/10 12:13:48 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ int	input_validation(int argc, char **argv)
 		result = 0;
 	}
 	else
-		validate_map_name(argv);
+		result = validate_map_name(argv);
 	return (result);
 }
 

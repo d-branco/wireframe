@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 09:56:50 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/10 11:37:31 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/10 13:30:18 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # include "libft/libft.h"
 # include <mlx.h>
 # include <math.h>
+# include <fcntl.h> //open(), 
 
 typedef struct s_data
 {
@@ -26,6 +27,9 @@ typedef struct s_data
 	int		endian;
 }			t_data;
 
+//fdf-input.c
 int	input_validation(int argc, char **argv);
+//fdf-map.c
+int	read_map(char *map_file, int **map);
 
 #endif
