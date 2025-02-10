@@ -6,20 +6,14 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 08:13:26 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/10 09:33:40 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/10 10:05:16 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <mlx.h>
+#include "fdf.h"
 
-typedef struct s_data
-{
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-}			t_data;
+static void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
+static int	close_window(void *param);
 
 int	main(void)
 {
@@ -37,10 +31,18 @@ int	main(void)
 
 	my_mlx_pixel_put(&img, 5, 5, 0x00FF0000);
 	mlx_put_image_to_window(mlx, mlx_window, img.img, 0, 0);
+	mlx_hook(mlx_window, 17, 0, close_window, NULL);
 	mlx_loop(mlx);
 }
 
-void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
+static int	close_window(void *param)
+{
+	(void)param;
+	exit(0);
+	return (0);
+}
+
+static void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
 {
 	char	*dst;
 
