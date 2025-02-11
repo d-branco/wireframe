@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 14:13:59 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/11 15:15:38 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/11 17:16:34 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,14 @@ void	draw_map(t_fdf *fdf)
 	while (y < fdf->map_width)
 	{
 		x = 0;
+		ft_printf("map: ");
 		while (x < fdf->map_length)
 		{
+			ft_printf("%3i", fdf->map[y][x]);
 			draw_all_the_lines(fdf, y, x);
 			x++;
 		}
+		ft_printf("\n");
 		y++;
 	}
 }
@@ -42,15 +45,21 @@ static void	draw_all_the_lines(t_fdf *fdf, int y, int x)
 
 	if (x < fdf->map_length - 1)
 	{
-		start = (t_point){40 * x + 100, 40 * y + 100, zz(fdf, y, x)};
-		end = (t_point){40 * x + 140, 40 * y + 100, zz(fdf, y, x + 1)};
-		draw_point_to_point(fdf, start, end);
+		start = (t_point){16 * x + 430 - 16 * y,
+			16 * x + 16 * y + 40 - (zz(fdf, y, x) / 8), zz(fdf, y, x)};
+		end = (t_point){16 * x + 430 - 16 * y + 16, 16 * x + 16 * y + 40 + 16
+			- (zz(fdf, y, x + 1) / 8), zz(fdf, y, x + 1)};
+		if ((start.x != end.x) || (start.y != end.y))
+			draw_point_to_point(fdf, start, end);
 	}
 	if (y < fdf->map_width - 1)
 	{
-		start = (t_point){40 * x + 100, 40 * y + 100, zz(fdf, y, x)};
-		end = (t_point){40 * x + 100, 40 * y + 140, zz(fdf, y + 1, x)};
-		draw_point_to_point(fdf, start, end);
+		start = (t_point){16 * x + 430 - 16 * y,
+			16 * x + 16 * y + 40 - (zz(fdf, y, x) / 8), zz(fdf, y, x)};
+		end = (t_point){16 * x + 430 - 16 * y - 16, 16 * x + 16 * y + 40 + 16
+			- (zz(fdf, y + 1, x) / 8), zz(fdf, y + 1, x)};
+		if ((start.x != end.x) || (start.y != end.y))
+			draw_point_to_point(fdf, start, end);
 	}
 }
 
@@ -61,6 +70,10 @@ static int	zz(t_fdf *fdf, int y, int x)
 
 	zz = ((fdf->map[y][x] - fdf->map_lowest) * 255)
 		/ (fdf->map_highest - fdf->map_lowest);
+	if (zz < 0)
+		zz = 0;
+	if (zz > 255)
+		zz = 255;
 	return (zz);
 }
 

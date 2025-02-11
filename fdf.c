@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:37:00 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/11 14:09:07 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/11 15:21:12 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,9 @@
 //	int		z;
 //}			t_point;
 
-static void	draw_glider(t_fdf *fdf);
+//static void	draw_glider(t_fdf *fdf);
 
+	//draw_glider(&fdf);
 int	main(int argc, char **argv)
 {
 	t_fdf	fdf;
@@ -42,7 +43,6 @@ int	main(int argc, char **argv)
 	if ((input_validation(argc, argv) != 1) || (read_map(argv[1]) == -1))
 		return (1);
 	initialize_mlx(&fdf, argv[1]);
-	draw_glider(&fdf);
 	draw_map(&fdf);
 	mlx_put_image_to_window(fdf.mlx, fdf.mlx_window, fdf.img, 0, 0);
 	mlx_hook(fdf.mlx_window, 17, 0, close_window, &fdf);
@@ -50,6 +50,7 @@ int	main(int argc, char **argv)
 	mlx_loop(fdf.mlx);
 }
 
+/*
 static void	draw_glider(t_fdf *fdf)
 {
 	t_point	start;
@@ -77,3 +78,4 @@ static void	draw_glider(t_fdf *fdf)
 	end = (t_point){600, 400, 100};
 	draw_point_to_point(fdf, start, end);
 }
+*/
