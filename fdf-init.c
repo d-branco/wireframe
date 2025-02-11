@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf-input.c                                        :+:      :+:    :+:   */
+/*   fdf-init.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/10 11:18:05 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/10 12:13:48 by abessa-m         ###   ########.fr       */
+/*   Created: 2025/02/11 08:11:42 by abessa-m          #+#    #+#             */
+/*   Updated: 2025/02/11 08:12:38 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,4 +53,14 @@ static int	validate_map_name(char **argv)
 	if (result == 0)
 		ft_printf("usage:\n./fdf <map_name>.fdf\n");
 	return (result);
+}
+
+
+void	initialize_mlx(t_fdf *fdf)
+{
+	fdf->mlx = mlx_init();
+	fdf->mlx_window = mlx_new_window(fdf->mlx, 960, 1040, "Hello ground!");
+	fdf->img = mlx_new_image(fdf->mlx, 960, 1040);
+	fdf->addr = mlx_get_data_addr(fdf->img, &fdf->bits_per_pixel, 
+			&fdf->line_length, &fdf->endian);
 }

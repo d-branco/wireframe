@@ -6,18 +6,34 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:37:00 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/10 22:23:04 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/11 08:39:11 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
 //usage
-//	valgrind -s --quiet ./fdf test_maps/42.fdf
-static void	my_mlx_pixel_put(t_data *data, int x, int y, int color);
-static int	close_window(void *param);
-static void	draw_point_to_point(t_data *img, t_point start, t_point end);
-int			key_hook(int keycode, t_fdf *fdf);
+//	make re && make clean && valgrind -s --quiet ./fdf test_maps/42.fdf
+
+//typedef struct	s_fdf
+//{
+//	void	*mlx;
+//	void	*mlx_window;
+//	void	*img;
+//	char	*addr;
+//	int		bits_per_pixel;
+//	int		line_length;
+//	int		endian;
+//}			t_fdf;
+
+//typedef struct s_point
+//{
+//	int		x;
+//	int		y;
+//	int		z;
+//}			t_point;
+
+static void	draw_cross(t_fdf *fdf);
 
 int	main(int argc, char **argv)
 {
@@ -25,73 +41,56 @@ int	main(int argc, char **argv)
 
 	if ((input_validation(argc, argv) != 1) || (read_map(argv[1]) == -1))
 		return (1);
-	fdf.mlx = mlx_init();
-	fdf.mlx_window = mlx_new_window(fdf.mlx, 960, 1040, "Hello ground!");
-	fdf.img.img = mlx_new_image(fdf.mlx, 960, 1040);
-	fdf.img.addr = mlx_get_data_addr(fdf.img.img, &fdf.img.bits_per_pixel, 
-			&fdf.img.line_length, &fdf.img.endian);
-	t_point start = {42, 42, 0};
-	t_point end = {225, 225, 100};
-	draw_point_to_point(&fdf.img, start, end);
-	start.x = 2;
-	start.y = 42;
-	end.x = 42;
-	end.y = 2;
-	draw_point_to_point(&fdf.img, start, end);
-	mlx_put_image_to_window(fdf.mlx, fdf.mlx_window, fdf.img.img, 0, 0);
+	
+	initialize_mlx(&fdf);
+
+	draw_cross(&fdf);
+	
+	mlx_put_image_to_window(fdf.mlx, fdf.mlx_window, fdf.img, 0, 0);
 	mlx_hook(fdf.mlx_window, 17, 0, close_window, &fdf);
 	mlx_hook(fdf.mlx_window, 2, 1L << 0, key_hook, &fdf);
 	mlx_loop(fdf.mlx);
 }
 
-static int	close_window(void *param)
+static void	draw_cross(t_fdf *fdf)
 {
-	t_fdf	*fdf;
+	t_point start;
+	t_point end;
 
-	fdf = (t_fdf *)param;
-	mlx_destroy_image(fdf->mlx, fdf->img.img);
-	mlx_destroy_window(fdf->mlx, fdf->mlx_window);
-	exit(0);
-	return (0);
-}
-
-static void	my_mlx_pixel_put(t_data *data, int x, int y, int color)
-{
-	char	*dst;
-
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
-	*(unsigned int *)dst = color;
-}
-
-static void	draw_point_to_point(t_data *img, t_point start, t_point end)
-{
-	int	max_steps;
-	int	x;
-	int	y;
-	int	i;
-
-	if ((end.x - start.x) >= (end.y - start.y))
-		max_steps = (end.x - start.x);
-	else
-		max_steps = (end.y - start.y);
-	x = start.x;
-	y = start.y;
-	i = 1;
-	while (i <= max_steps)
-	{
-		my_mlx_pixel_put(img, x, y, 0xFFFFFFFF);
-		x = start.x + (i * (end.x - start.x) / max_steps);
-		y = start.y + (i * (end.y - start.y) / max_steps);
-		i++;
-	}
-}
-
-int	key_hook(int keycode, t_fdf *fdf)
-{
-	if (keycode == 65307)
-	{
-		mlx_destroy_window(fdf->mlx, fdf->mlx_window);
-		exit(0);
-	}
-	return (0);
+	start = (t_point){200, 100};
+	end = (t_point){300, 100};
+	draw_point_to_point(fdf, start, end);
+	start = (t_point){300, 100};
+	end = (t_point){300, 200};
+	draw_point_to_point(fdf, start, end);
+	start = (t_point){300, 200};
+	end = (t_point){400, 200};
+	draw_point_to_point(fdf, start, end);
+	start = (t_point){400, 200};
+	end = (t_point){400, 300};
+	draw_point_to_point(fdf, start, end);
+	start = (t_point){400, 300};
+	end = (t_point){300, 300};
+	draw_point_to_point(fdf, start, end);
+	start = (t_point){300, 300};
+	end = (t_point){300, 500};
+	draw_point_to_point(fdf, start, end);
+	start = (t_point){300, 500};
+	end = (t_point){200, 500};
+	draw_point_to_point(fdf, start, end);
+	start = (t_point){200, 500};
+	end = (t_point){200, 300};
+	draw_point_to_point(fdf, start, end);
+	start = (t_point){200, 300};
+	end = (t_point){100, 300};
+	draw_point_to_point(fdf, start, end);
+	start = (t_point){100, 300};
+	end = (t_point){100, 200};
+	draw_point_to_point(fdf, start, end);
+	start = (t_point){100, 200};
+	end = (t_point){200, 200};
+	draw_point_to_point(fdf, start, end);
+	start = (t_point){200, 200};
+	end = (t_point){200, 100};
+	draw_point_to_point(fdf, start, end);
 }

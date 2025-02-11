@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 08:19:06 by abessa-m          #+#    #+#              #
-#    Updated: 2025/02/10 13:35:43 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/02/11 08:17:07 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,14 +16,16 @@ LIBFT		:= libft/libft.a mlx_linux/libmlx_Linux.a
 #################################################################### Compiler  #
 CC			:= cc
 CFLAGS		:= -g -lm -Wall -Wextra #-Werror
+MLXFLAGS	:= \
+	-Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz
 ########################################################## Intermidiate steps  #
 RM			:= rm -f
 AR			:= ar rcs
 ######################################################### Objects and Headers  #
 HEADERS		= fdf.h
 SRCS		= \
-	fdf.c \
-	fdf-input.c fdf-map.c 
+	fdf.c fdf-init.c fdf-close.c \
+	fdf-map.c fdf-line.c 
 OBJS		= $(SRCS:.c=.o)
 SRCS-BONUS		= 
 OBJS-BONUS		= $(SRCS-BONUS:.c=.o)
@@ -31,9 +33,7 @@ OBJS-BONUS		= $(SRCS-BONUS:.c=.o)
 all: $(LIBFT) $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
-	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) \
-	 -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz \
-	 -o $(NAME) \
+	@$(CC) $(CFLAGS) $(OBJS) $(LIBFT) $(MLXFLAGS) -o $(NAME) \
 	&& echo "$(GRAY)Compiled:$(COR) $(OBJS)"
 
 %.o: %.c
@@ -58,6 +58,8 @@ fclean: clean
 
 re: fclean all
 	@echo "$(GRAY)redone$(COR)"
+
+.PHONY: all clean fclean re
 ####################################################################### Colors #
 COR = \033[0m# COlor Remove
 PURPLE = \033[1;35m# purple
