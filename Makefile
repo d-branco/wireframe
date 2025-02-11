@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 08:19:06 by abessa-m          #+#    #+#              #
-#    Updated: 2025/02/11 13:36:43 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/02/11 14:14:23 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -25,7 +25,7 @@ AR			:= ar rcs
 HEADERS		= fdf.h
 SRCS		= \
 	fdf.c fdf-init.c fdf-close.c \
-	fdf-map.c fdf-line.c 
+	fdf-map.c fdf-line.c fdf-draw.c 
 OBJS		= $(SRCS:.c=.o)
 SRCS-BONUS		= 
 OBJS-BONUS		= $(SRCS-BONUS:.c=.o)

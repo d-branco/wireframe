@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 08:11:42 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/11 13:45:24 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/11 13:58:45 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 
 static int	validate_map_name(char **argv);
 static void	map_the_map(t_fdf *fdf, char *map_file);
+static void	map_the_peaks(t_fdf *fdf);
 
 int	input_validation(int argc, char **argv)
 {
@@ -76,6 +77,7 @@ void	initialize_mlx(t_fdf *fdf, char *map_name)
 		i++;
 	}
 	map_the_map(fdf, map_name);
+	map_the_peaks(fdf);
 }
 
 static void	map_the_map(t_fdf *fdf, char *map_file)
@@ -105,4 +107,29 @@ static void	map_the_map(t_fdf *fdf, char *map_file)
 	free(line);
 	close(map_file_fd);
 	return ;
+}
+
+static void	map_the_peaks(t_fdf *fdf)
+{
+	int	y;
+	int	x;
+
+	fdf->map_highest = fdf->map[0][0];
+	fdf->map_lowest = fdf->map[0][0];
+	y = 0;
+	while (y < fdf->map_width)
+	{
+		x = 0;
+		while (x < fdf->map_length)
+		{
+			if (fdf->map[y][x] < fdf->map_lowest)
+				fdf->map_lowest = fdf->map[y][x];
+			if (fdf->map[y][x] > fdf->map_highest)
+				fdf->map_highest = fdf->map[y][x];
+			x++;
+		}
+		y++;
+	}
+	ft_printf("Maps highest peak: %i\n", fdf->map_highest);
+	ft_printf("Maps lowest peak: %i\n", fdf->map_lowest);
 }

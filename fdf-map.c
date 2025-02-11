@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 11:54:23 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/10 21:03:37 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/11 14:05:45 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	read_map(char *map_file)
 		return (ft_printf("Error reading map file!\n"), 1);
 	while (line)
 	{
-		ft_printf("map: %s", line);
 		free(line);
 		line = get_next_line(map_file_fd);
 	}
