@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 09:56:50 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/11 10:11:29 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/11 13:02:03 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ typedef struct s_fdf
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
+	int		map_length;
+	int		map_width;
+	int		**map;
 }			t_fdf;
 
 //	x:	axis
@@ -48,7 +51,7 @@ typedef struct s_point
 
 //fdf-ininit.c
 int		input_validation(int argc, char **argv);
-void	initialize_mlx(t_fdf *fdf);
+void	initialize_mlx(t_fdf *fdf, char *map_name);
 //fdf-close.c
 int		close_window(void *param);
 int		key_hook(int keycode, t_fdf *fdf);

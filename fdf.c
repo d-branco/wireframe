@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:37:00 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/11 10:14:30 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/11 13:30:24 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	main(int argc, char **argv)
 
 	if ((input_validation(argc, argv) != 1) || (read_map(argv[1]) == -1))
 		return (1);
-	initialize_mlx(&fdf);
+	initialize_mlx(&fdf, argv[1]);
 	draw_cross(&fdf);
 	mlx_put_image_to_window(fdf.mlx, fdf.mlx_window, fdf.img, 0, 0);
 	mlx_hook(fdf.mlx_window, 17, 0, close_window, &fdf);
