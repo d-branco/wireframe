@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 10:37:00 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/11 08:39:11 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/11 10:14:30 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,11 +41,8 @@ int	main(int argc, char **argv)
 
 	if ((input_validation(argc, argv) != 1) || (read_map(argv[1]) == -1))
 		return (1);
-	
 	initialize_mlx(&fdf);
-
 	draw_cross(&fdf);
-	
 	mlx_put_image_to_window(fdf.mlx, fdf.mlx_window, fdf.img, 0, 0);
 	mlx_hook(fdf.mlx_window, 17, 0, close_window, &fdf);
 	mlx_hook(fdf.mlx_window, 2, 1L << 0, key_hook, &fdf);
@@ -54,43 +51,28 @@ int	main(int argc, char **argv)
 
 static void	draw_cross(t_fdf *fdf)
 {
-	t_point start;
-	t_point end;
+	t_point	start;
+	t_point	end;
 
-	start = (t_point){200, 100};
-	end = (t_point){300, 100};
+	start = (t_point){400, 200, 255};
+	end = (t_point){600, 200, 255};
 	draw_point_to_point(fdf, start, end);
-	start = (t_point){300, 100};
-	end = (t_point){300, 200};
+	start = (t_point){600, 200, 255};
+	end = (t_point){200, 600, 0};
 	draw_point_to_point(fdf, start, end);
-	start = (t_point){300, 200};
-	end = (t_point){400, 200};
+	start = (t_point){200, 600, 0};
+	end = (t_point){200, 400, 0};
 	draw_point_to_point(fdf, start, end);
-	start = (t_point){400, 200};
-	end = (t_point){400, 300};
+	start = (t_point){200, 400, 0};
+	end = (t_point){400, 200, 255};
 	draw_point_to_point(fdf, start, end);
-	start = (t_point){400, 300};
-	end = (t_point){300, 300};
+	start = (t_point){600, 400, 100};
+	end = (t_point){600, 600, 100};
 	draw_point_to_point(fdf, start, end);
-	start = (t_point){300, 300};
-	end = (t_point){300, 500};
+	start = (t_point){600, 600, 100};
+	end = (t_point){400, 600, 100};
 	draw_point_to_point(fdf, start, end);
-	start = (t_point){300, 500};
-	end = (t_point){200, 500};
-	draw_point_to_point(fdf, start, end);
-	start = (t_point){200, 500};
-	end = (t_point){200, 300};
-	draw_point_to_point(fdf, start, end);
-	start = (t_point){200, 300};
-	end = (t_point){100, 300};
-	draw_point_to_point(fdf, start, end);
-	start = (t_point){100, 300};
-	end = (t_point){100, 200};
-	draw_point_to_point(fdf, start, end);
-	start = (t_point){100, 200};
-	end = (t_point){200, 200};
-	draw_point_to_point(fdf, start, end);
-	start = (t_point){200, 200};
-	end = (t_point){200, 100};
+	start = (t_point){400, 600, 100};
+	end = (t_point){600, 400, 100};
 	draw_point_to_point(fdf, start, end);
 }

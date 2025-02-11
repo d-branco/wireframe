@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 09:56:50 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/11 08:20:40 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/11 10:11:29 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 //	bits_per_pixel:		How many bits are used for one pixel
 //	line_length:		How many bytes are used for one horizontal line
 //	endian:				How the computer stores numbers in memory
-typedef struct	s_fdf
+typedef struct s_fdf
 {
 	void	*mlx;
 	void	*mlx_window;
