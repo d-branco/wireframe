@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 08:19:06 by abessa-m          #+#    #+#              #
-#    Updated: 2025/02/11 14:14:23 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/02/14 11:17:54 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,18 +17,19 @@ LIBFT		:= libft/libft.a mlx_linux/libmlx_Linux.a
 CC			:= cc
 CFLAGS		:= -g -lm -Wall -Wextra -Werror
 MLXFLAGS	:= \
-	-Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz
+	-Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lmlx -lXext -lX11 -lm -lz
 ########################################################## Intermidiate steps  #
 RM			:= rm -f
 AR			:= ar rcs
 ######################################################### Objects and Headers  #
-HEADERS		= fdf.h
+#HEADERS		= fdf.h fdf_bonus.h
 SRCS		= \
 	fdf.c fdf-init.c fdf-close.c \
 	fdf-map.c fdf-line.c fdf-draw.c 
 OBJS		= $(SRCS:.c=.o)
-SRCS-BONUS		= 
-OBJS-BONUS		= $(SRCS-BONUS:.c=.o)
+SRCS-BONUS	= \
+	fdf_bonus.c
+OBJS-BONUS	= $(SRCS-BONUS:.c=.o)
 ##################################################################### Targets  #
 all: $(LIBFT) $(NAME)
 
@@ -44,7 +45,7 @@ $(LIBFT):
 	&& make --no-print-directory -C mlx_linux/ 
 
 bonus: $(OBJS-BONUS) $(LIBFT)
-	@$(CC) $(CFLAGS) $(OBJS-BONUS) $(LIBFT) -o $(NAME-BONUS) \
+	@$(CC) $(CFLAGS) $(OBJS-BONUS) $(LIBFT) $(MLXFLAGS) -o $(NAME-BONUS) \
 	&& echo "$(GRAY)Compiled:$(COR) $(OBJS-BONUS)"
 
 clean:
@@ -61,7 +62,7 @@ re: fclean all
 
 .PHONY: all clean fclean re
 ####################################################################### Colors #
-COR = \033[0m# COlor Remove
-PURPLE = \033[1;35m# purple
-GRAY = \033[1;90m# gray
-YELLOW = \033[1;93m# yellow
+COR		= \033[0m		# COlor Remove
+PURPLE	= \033[1;35m	# purple
+GRAY	= \033[1;90m	# gray
+YELLOW	= \033[1;93m	# yellow
