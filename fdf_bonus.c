@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:38:36 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/14 12:10:42 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/14 14:36:11 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@ void	f(int keysym, t_fdf *fdf);
 void	our_pixel_put(t_fdf *fdf, int x, int y, int color);
 int		close_window(void *param);
 int		key_hook(int keycode, t_fdf *fdf);
+void	data_initialize(t_fdf *fdf);
+void	hook_n_loop(t_fdf *fdf);
 
 /*typedef struct s_fdf
 {
@@ -34,54 +36,59 @@ int		key_hook(int keycode, t_fdf *fdf);
 }			t_fdf;
 */
 
+//mlx_pixel_put(fdf.mlx_ptr, fdf.mlx_window, 0, 0, 0xFF0000);
 int	main(void)
 {
 	t_fdf	fdf;
 
-	fdf.mlx_ptr = mlx_init();
-	if (NULL == fdf.mlx_ptr)
-		return (1);
-	fdf.mlx_window = mlx_new_window(fdf.mlx_ptr, HEIGHT, WIDTH, "Here I am");
-	if (fdf.mlx_window == NULL)
-	{
-		mlx_destroy_display(fdf.mlx_ptr);
-		free(fdf.mlx_ptr);
-		return (2);
-	}
-	fdf.img = mlx_new_image(fdf.mlx_ptr, WIDTH, HEIGHT);
-	if (fdf.img == NULL)
-	{
-		mlx_destroy_window(fdf.mlx_ptr, fdf.mlx_window);
-		mlx_destroy_display(fdf.mlx_ptr);
-		free(fdf.mlx_ptr);
-		return (3);
-	}
-	fdf.addr = mlx_get_data_addr(fdf.img, &fdf.bits_per_pixel, &fdf.line_length, &fdf.endian);
-	if (fdf.addr == NULL)
-	{
-		mlx_destroy_image(fdf.mlx_ptr, fdf.img);
-		mlx_destroy_window(fdf.mlx_ptr, fdf.mlx_window);
-		mlx_destroy_display(fdf.mlx_ptr);
-		free(fdf.mlx_ptr);
-		return (3);
-	}
-	ft_printf("IMG: Line length: %i\nIMG: bits per pixel: %i\nIMG: endian: %i\n", fdf.line_length, fdf.bits_per_pixel, fdf.endian);
-	mlx_key_hook(fdf.mlx_window, handle_input, &fdf);
-	mlx_hook(fdf.mlx_window, 17, 0, close_window, &fdf);
-	mlx_hook(fdf.mlx_window, 2, 1L << 0, key_hook, &fdf);
-	mlx_loop(fdf.mlx_ptr);
+	data_initialize(&fdf);
+	hook_n_loop(&fdf);
 }
 
-int	key_hook(int keycode, t_fdf *fdf)
+void	hook_n_loop(t_fdf *fdf)
+{
+	mlx_key_hook(fdf->mlx_window, handle_input, fdf);
+	mlx_hook(fdf->mlx_window, 17, 0, close_window, fdf);
+	mlx_hook(fdf->mlx_window, 2, 1L << 0, key_hook, fdf);
+	mlx_loop(fdf->mlx_ptr);
+}
+
+void	data_initialize(t_fdf *fdf)
+{
+	fdf->mlx_ptr = mlx_init();
+	if (NULL == fdf->mlx_ptr)
+		exit (1);
+	fdf->mlx_window = mlx_new_window(fdf->mlx_ptr, HEIGHT, WIDTH, "Here I am");
+	if (fdf->mlx_window == NULL)
 	{
-		if (keycode == 32)
-		{
-			fdf->angle += (M_PI * 2) / 360;
-			if (fdf->angle > (M_PI * 2))
-				fdf->angle = 0;
-		}
-		return (0);
+		mlx_destroy_display(fdf->mlx_ptr);
+		free(fdf->mlx_ptr);
+		exit (2);
 	}
+	fdf->img = mlx_new_image(fdf->mlx_ptr, WIDTH, HEIGHT);
+	if (fdf->img == NULL)
+	{
+		mlx_destroy_window(fdf->mlx_ptr, fdf->mlx_window);
+		mlx_destroy_display(fdf->mlx_ptr);
+		free(fdf->mlx_ptr);
+		exit (3);
+	}
+	fdf->addr = mlx_get_data_addr(
+			fdf->img, &fdf->bits_per_pixel, &fdf->line_length, &fdf->endian);
+	fdf->angle = 0;
+}
+
+int	key_hook(int keysym, t_fdf *fdf)
+{
+	if (keysym == 32)
+	{
+		fdf->angle++;
+		if (fdf->angle >= 360)
+			fdf->angle = 0;
+		ft_printf("angle: %i\n", fdf->angle);
+	}
+	return (0);
+}
 
 int	close_window(void *param)
 {
@@ -94,6 +101,7 @@ int	close_window(void *param)
 	exit(0);
 }
 
+//ft_printf("Event: Pressed key %d\n", keysym);
 int	handle_input(int keysym, t_fdf *fdf)
 {
 	if (keysym == 65307)
@@ -107,7 +115,6 @@ int	handle_input(int keysym, t_fdf *fdf)
 	}
 	else
 		f(keysym, fdf);
-	ft_printf("Event: Pressed key %d\n", keysym);
 	return (0);
 }
 

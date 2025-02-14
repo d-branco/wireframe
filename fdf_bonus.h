@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 09:56:50 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/14 12:02:24 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/14 13:19:03 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ typedef struct s_fdf
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
-	double	angle;
+	int		angle;
 }			t_fdf;
 
 //	x:	axis
