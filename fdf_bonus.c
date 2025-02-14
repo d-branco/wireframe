@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:38:36 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/14 17:44:47 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:13:47 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,9 @@ int		get_map_width(char *map_file);
 int		paint_zz(int green);
 void	draw_center(t_fdf *fdf);
 void	draw_point_to_point(t_fdf *fdf, t_point start, t_point end);
+void	draw_map(t_fdf *fdf);
+void	draw_all_the_lines(t_fdf *fdf, int y, int x);
+int		zz(t_fdf *fdf, int y, int x);
 
 //mlx_pixel_put(fdf.mlx_ptr, fdf.mlx_window, 0, 0, 0xFF0000);
 int	main(int argc, char **argv)
@@ -42,9 +45,72 @@ int	main(int argc, char **argv)
 	fdf.win_width = 1920 / 2;
 	fdf.win_height = 1080 - 40;
 	mlx_initialize(&fdf);
-	draw_center(&fdf);
 	map_initialize(&fdf, argv[1]);
+	draw_center(&fdf);
 	hook_n_loop(&fdf);
+}
+
+void	draw_map(t_fdf *fdf)
+{
+	int	y;
+	int	x;
+
+	y = 0;
+	while (y < fdf->map_width)
+	{
+		x = 0;
+		while (x < fdf->map_length)
+		{
+			draw_all_the_lines(fdf, y, x);
+			x++;
+		}
+		y++;
+	}
+}
+
+//ft_printf("Start    x: %i,    y: %i,    z: %i\n", start.x, start.y, start.z);
+//ft_printf("End      x: %i,    y: %i,    z: %i\n", end.x, end.y, end.z);
+void	draw_all_the_lines(t_fdf *fdf, int y, int x)
+{
+	t_point	start;
+	t_point	end;
+
+	if (x < fdf->map_length - 1)
+	{
+		start = (t_point){(fdf->win_width / 2) + 16 * x - 16 * y,
+			(fdf->win_height / 2) + 16 * x + 16 * y - (zz(fdf, y, x) / 8),
+			zz(fdf, y, x)};
+		end = (t_point){(fdf->win_width / 2) + 16 * x - 16 * y + 16,
+			(fdf->win_height / 2) + 16 * x + 16 * y + 16 - (zz(fdf, y, x + 1) / 8),
+			zz(fdf, y, x + 1)};
+		if ((start.x != end.x) || (start.y != end.y))
+			draw_point_to_point(fdf, start, end);
+	}
+	if (y < fdf->map_width - 1)
+	{
+		start = (t_point){(fdf->win_width / 2) + 16 * x - 16 * y,
+			(fdf->win_height / 2) + 16 * x + 16 * y - (zz(fdf, y, x) / 8),
+			zz(fdf, y, x)};
+		end = (t_point){(fdf->win_width / 2) + 16 * x - 16 * y - 16,
+			(fdf->win_height / 2) + 16 * x + 16 * y + 16 - (zz(fdf, y + 1, x) / 8),
+			zz(fdf, y + 1, x)};
+		if ((start.x != end.x) || (start.y != end.y))
+			draw_point_to_point(fdf, start, end);
+	}
+}
+
+// linear interpolation
+int	zz(t_fdf *fdf, int y, int x)
+{
+	int	zz;
+
+	zz = ((fdf->map[y][x] - fdf->map_lowest) * 255)
+		/ (fdf->map_highest - fdf->map_lowest);
+	if (zz < 0)
+		zz = 0;
+	if (zz > 255)
+		zz = 255;
+	return (zz);
 }
 
 void	draw_center(t_fdf *fdf)
@@ -64,6 +130,7 @@ void	draw_center(t_fdf *fdf)
 	draw_point_to_point(fdf, start, end);
 	ft_printf("Center point at "
 		"x: %i    y: %i\n", (fdf->win_width / 2), (fdf->win_height / 2));
+	draw_map(fdf);
 	mlx_put_image_to_window(fdf->mlx_ptr, fdf->mlx_window, fdf->img, 0, 0);
 	return ;
 }
@@ -414,6 +481,7 @@ void	f(int keysym, t_fdf *fdf)
 		color_screen(fdf, encode_rgb(0, 255, 0));
 	if (keysym == 98)
 		color_screen(fdf, encode_rgb(0, 0, 255));
+	draw_map(fdf);
 	mlx_put_image_to_window(fdf->mlx_ptr, fdf->mlx_window, fdf->img, 0, 0);
 }
 
