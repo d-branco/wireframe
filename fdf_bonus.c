@@ -6,14 +6,11 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:38:36 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/14 15:50:14 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/14 16:09:38 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf_bonus.h"
-
-#define WIDTH	225
-#define HEIGHT	225
 
 int		handle_input(int keysym, t_fdf *fdf);
 int		encode_rgb(unsigned char red, unsigned char green, unsigned char blue);
@@ -32,18 +29,6 @@ int		read_map(char *map_file);
 int		get_map_length(char *map_file);
 int		get_map_width(char *map_file);
 
-/*typedef struct s_fdf
-{
-	void	*mlx_ptr;
-	void	*mlx_window;
-	void	*img;
-	char	*addr;
-	int		bits_per_pixel;
-	int		line_length;
-	int		endian;
-}			t_fdf;
-*/
-
 //mlx_pixel_put(fdf.mlx_ptr, fdf.mlx_window, 0, 0, 0xFF0000);
 int	main(int argc, char **argv)
 {
@@ -51,6 +36,8 @@ int	main(int argc, char **argv)
 
 	if ((input_validation(argc, argv) != 1) || (read_map(argv[1]) == -1))
 		exit (1);
+	fdf.win_width = 1920;
+	fdf.win_height = 1080 - 40;
 	mlx_initialize(&fdf);
 	map_initialize(&fdf, argv[1]);
 	hook_n_loop(&fdf);
@@ -263,14 +250,15 @@ void	mlx_initialize(t_fdf *fdf)
 	fdf->mlx_ptr = mlx_init();
 	if (NULL == fdf->mlx_ptr)
 		exit (1);
-	fdf->mlx_window = mlx_new_window(fdf->mlx_ptr, HEIGHT, WIDTH, "Here I am");
+	fdf->mlx_window = mlx_new_window(
+			fdf->mlx_ptr, fdf->win_width, fdf->win_height, "Here I am");
 	if (fdf->mlx_window == NULL)
 	{
 		mlx_destroy_display(fdf->mlx_ptr);
 		free(fdf->mlx_ptr);
 		exit (2);
 	}
-	fdf->img = mlx_new_image(fdf->mlx_ptr, WIDTH, HEIGHT);
+	fdf->img = mlx_new_image(fdf->mlx_ptr, fdf->win_width, fdf->win_height);
 	if (fdf->img == NULL)
 	{
 		mlx_destroy_window(fdf->mlx_ptr, fdf->mlx_window);
@@ -333,10 +321,10 @@ void	color_screen(t_fdf *fdf, int color)
 	int	y;
 
 	y = 0;
-	while (y < WIDTH)
+	while (y < fdf->win_height)
 	{
 		x = 0;
-		while (x < HEIGHT)
+		while (x < fdf->win_width)
 		{
 			our_pixel_put(fdf, x, y, color);
 			x++;

@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/11 14:13:59 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/14 15:29:37 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/14 16:10:27 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,14 @@ void	draw_map(t_fdf *fdf)
 	while (y < fdf->map_width)
 	{
 		x = 0;
-		//ft_printf("map: ");
+		ft_printf("map: ");
 		while (x < fdf->map_length)
 		{
-			//ft_printf("%3i", fdf->map[y][x]);
+			ft_printf("%3i", fdf->map[y][x]);
 			draw_all_the_lines(fdf, y, x);
 			x++;
 		}
-		//ft_printf("\n");
+		ft_printf("\n");
 		y++;
 	}
 }
