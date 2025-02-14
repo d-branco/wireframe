@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 09:56:50 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/14 15:56:49 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/14 16:55:45 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,5 +50,11 @@ typedef struct s_fdf
 //	x:	axis
 //	y:	ordinate
 //	z:	altitude
+typedef struct s_point
+{
+	int		x;
+	int		y;
+	int		z;
+}			t_point;
 
 #endif

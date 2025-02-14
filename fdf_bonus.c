@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:38:36 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/14 16:09:38 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/14 17:15:59 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@ void	map_initialize(t_fdf *fdf, char *map_name);
 int		read_map(char *map_file);
 int		get_map_length(char *map_file);
 int		get_map_width(char *map_file);
+int		paint_green(int green);
+void	draw_center(t_fdf *fdf);
 
 //mlx_pixel_put(fdf.mlx_ptr, fdf.mlx_window, 0, 0, 0xFF0000);
 int	main(int argc, char **argv)
@@ -39,8 +41,62 @@ int	main(int argc, char **argv)
 	fdf.win_width = 1920;
 	fdf.win_height = 1080 - 40;
 	mlx_initialize(&fdf);
+	draw_center(&fdf);
 	map_initialize(&fdf, argv[1]);
 	hook_n_loop(&fdf);
+}
+
+void	draw_center(t_fdf *fdf)
+{
+	return ;
+}
+
+/*typedef struct s_point
+{
+	int		x;
+	int		y;
+	int		z;
+}			t_point;*/
+void	draw_point_to_point(t_fdf *fdf, t_point start, t_point end)
+{
+	int		max_steps;
+	double	x;
+	double	y;
+	int		z;
+	int		current_step;
+
+	if (abs(end.x - start.x) >= abs(end.y - start.y))
+		max_steps = abs(end.x - start.x);
+	else
+		max_steps = abs(end.y - start.y);
+	x = start.x;
+	y = start.y;
+	z = paint_green(start.z);
+	current_step = 0;
+	while (current_step <= max_steps)
+	{
+		our_pixel_put(fdf->img, x, y, z);
+		x = start.x + (current_step * (end.x - start.x) / max_steps);
+		y = start.y + (current_step * (end.y - start.y) / max_steps);
+		z = paint_green(start.z + (current_step * (end.z - start.z) / max_steps));
+		current_step++;
+	}
+}
+
+int	paint_green(int green)
+{
+	int	red;
+	int	blue;
+
+	if (green < 0)
+		green = 0;
+	if (green > 255)
+		green = 255;
+	green = green / 2 + 127;
+	red = 255 - green;
+	green = green;
+	blue = 255 - green;
+	return ((red << 16) | (green << 8) | blue);
 }
 
 int	read_map(char *map_file)
@@ -348,6 +404,8 @@ void	our_pixel_put(t_fdf *fdf, int x, int y, int color)
 {
 	int	offset;
 
+	if ((x < 0) || (x >= fdf->win_width) || (y < 0) | (y >= fdf->win_height))
+		return ;
 	offset = (fdf->line_length * y) + (x * (fdf->bits_per_pixel / 8));
 	*((unsigned int *)(fdf->addr + offset)) = color;
 }
