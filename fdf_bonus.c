@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:38:36 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/14 18:13:47 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/14 18:38:40 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,22 +77,22 @@ void	draw_all_the_lines(t_fdf *fdf, int y, int x)
 
 	if (x < fdf->map_length - 1)
 	{
-		start = (t_point){(fdf->win_width / 2) + 16 * x - 16 * y,
-			(fdf->win_height / 2) + 16 * x + 16 * y - (zz(fdf, y, x) / 8),
+		start = (t_point){(fdf->win_width / 2) + fdf-> edge_len * x - fdf-> edge_len * y,
+			(fdf->win_height / 2) + fdf-> edge_len * x + fdf-> edge_len * y - (zz(fdf, y, x) / 8),
 			zz(fdf, y, x)};
-		end = (t_point){(fdf->win_width / 2) + 16 * x - 16 * y + 16,
-			(fdf->win_height / 2) + 16 * x + 16 * y + 16 - (zz(fdf, y, x + 1) / 8),
+		end = (t_point){(fdf->win_width / 2) + fdf-> edge_len * x - fdf-> edge_len * y + fdf-> edge_len,
+			(fdf->win_height / 2) + fdf-> edge_len * x + fdf-> edge_len * y + fdf-> edge_len - (zz(fdf, y, x + 1) / 8),
 			zz(fdf, y, x + 1)};
 		if ((start.x != end.x) || (start.y != end.y))
 			draw_point_to_point(fdf, start, end);
 	}
 	if (y < fdf->map_width - 1)
 	{
-		start = (t_point){(fdf->win_width / 2) + 16 * x - 16 * y,
-			(fdf->win_height / 2) + 16 * x + 16 * y - (zz(fdf, y, x) / 8),
+		start = (t_point){(fdf->win_width / 2) + fdf-> edge_len * x - fdf-> edge_len * y,
+			(fdf->win_height / 2) + fdf-> edge_len * x + fdf-> edge_len * y - (zz(fdf, y, x) / 8),
 			zz(fdf, y, x)};
-		end = (t_point){(fdf->win_width / 2) + 16 * x - 16 * y - 16,
-			(fdf->win_height / 2) + 16 * x + 16 * y + 16 - (zz(fdf, y + 1, x) / 8),
+		end = (t_point){(fdf->win_width / 2) + fdf-> edge_len * x - fdf-> edge_len * y - fdf-> edge_len,
+			(fdf->win_height / 2) + fdf-> edge_len * x + fdf-> edge_len * y + fdf-> edge_len - (zz(fdf, y + 1, x) / 8),
 			zz(fdf, y + 1, x)};
 		if ((start.x != end.x) || (start.y != end.y))
 			draw_point_to_point(fdf, start, end);
@@ -280,6 +280,7 @@ void	map_initialize(t_fdf *fdf, char *map_name)
 	map_the_map(fdf, map_name);
 	map_the_peaks(fdf);
 	fdf->angle = 0;
+	fdf-> edge_len = 16; //prototype. Works well for 42. Needs to be calculated
 }
 
 void	map_the_map(t_fdf *fdf, char *map_file)
