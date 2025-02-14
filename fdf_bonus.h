@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 09:56:50 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/14 13:19:03 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/14 15:09:53 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,11 @@ typedef struct s_fdf
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
+	int		map_length;
+	int		map_width;
+	int		**map;
+	int		map_highest;
+	int		map_lowest;
 	int		angle;
 }			t_fdf;
 

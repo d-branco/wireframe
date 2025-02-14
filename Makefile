@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 08:19:06 by abessa-m          #+#    #+#              #
-#    Updated: 2025/02/14 11:17:54 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/02/14 15:42:07 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -62,7 +62,21 @@ re: fclean all
 
 .PHONY: all clean fclean re
 ####################################################################### Colors #
-COR		= \033[0m		# COlor Remove
-PURPLE	= \033[1;35m	# purple
-GRAY	= \033[1;90m	# gray
-YELLOW	= \033[1;93m	# yellow
+COR		= \033[0m# COlor Remove
+PURPLE	= \033[1;35m# purple
+GRAY	= \033[1;90m# gray
+YELLOW	= \033[1;93m# yellow
+######################################################################### Test #
+#Recomendation: alias t="make test"
+test: bonus
+	@echo -n "$(YELLOW)" ; \
+	norminette *.c | grep -v -E \
+	"Too many functions in file|Comment is invalid in this scope" \
+	| grep Error ; echo -n "$(COR)" ; \
+	valgrind --quiet -s --leak-check=full --track-origins=yes \
+	./fdf test_maps/42.fdf && \
+	echo "$(GRAY)Return value: $$?$(COR)" ; \
+	$(RM) *.o *.gch ; 
+
+#	./push_swap "0 2 1" ; \
+#	echo "$(GRAY)Return value: $$?$(COR)" ; \
