@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:38:36 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/14 17:15:59 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/14 17:44:47 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,9 @@ void	map_initialize(t_fdf *fdf, char *map_name);
 int		read_map(char *map_file);
 int		get_map_length(char *map_file);
 int		get_map_width(char *map_file);
-int		paint_green(int green);
+int		paint_zz(int green);
 void	draw_center(t_fdf *fdf);
+void	draw_point_to_point(t_fdf *fdf, t_point start, t_point end);
 
 //mlx_pixel_put(fdf.mlx_ptr, fdf.mlx_window, 0, 0, 0xFF0000);
 int	main(int argc, char **argv)
@@ -38,7 +39,7 @@ int	main(int argc, char **argv)
 
 	if ((input_validation(argc, argv) != 1) || (read_map(argv[1]) == -1))
 		exit (1);
-	fdf.win_width = 1920;
+	fdf.win_width = 1920 / 2;
 	fdf.win_height = 1080 - 40;
 	mlx_initialize(&fdf);
 	draw_center(&fdf);
@@ -48,6 +49,22 @@ int	main(int argc, char **argv)
 
 void	draw_center(t_fdf *fdf)
 {
+	t_point	start;
+	t_point	end;
+
+	start = (t_point)
+	{(int)((fdf->win_width / 2) - 5), (int)(fdf->win_height / 2), 0};
+	end = (t_point)
+	{(int)((fdf->win_width / 2) + 5 + 1), (int)(fdf->win_height / 2), 0};
+	draw_point_to_point(fdf, start, end);
+	start = (t_point)
+	{(int)(fdf->win_width / 2), (int)((fdf->win_height / 2) - 5), 0};
+	end = (t_point)
+	{(int)(fdf->win_width / 2), (int)((fdf->win_height / 2) + 5 + 1), 0};
+	draw_point_to_point(fdf, start, end);
+	ft_printf("Center point at "
+		"x: %i    y: %i\n", (fdf->win_width / 2), (fdf->win_height / 2));
+	mlx_put_image_to_window(fdf->mlx_ptr, fdf->mlx_window, fdf->img, 0, 0);
 	return ;
 }
 
@@ -71,19 +88,19 @@ void	draw_point_to_point(t_fdf *fdf, t_point start, t_point end)
 		max_steps = abs(end.y - start.y);
 	x = start.x;
 	y = start.y;
-	z = paint_green(start.z);
+	z = paint_zz(start.z);
 	current_step = 0;
 	while (current_step <= max_steps)
 	{
-		our_pixel_put(fdf->img, x, y, z);
+		our_pixel_put(fdf, x, y, z);
 		x = start.x + (current_step * (end.x - start.x) / max_steps);
 		y = start.y + (current_step * (end.y - start.y) / max_steps);
-		z = paint_green(start.z + (current_step * (end.z - start.z) / max_steps));
+		z = paint_zz(start.z + (current_step * (end.z - start.z) / max_steps));
 		current_step++;
 	}
 }
 
-int	paint_green(int green)
+int	paint_zz(int green)
 {
 	int	red;
 	int	blue;
