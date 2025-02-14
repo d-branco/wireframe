@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:38:36 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/14 20:21:05 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/14 23:16:07 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,8 +16,8 @@ int		handle_input(int keysym, t_fdf *fdf);
 int		encode_rgb(unsigned char red, unsigned char green, unsigned char blue);
 void	f(int keysym, t_fdf *fdf);
 void	our_pixel_put(t_fdf *fdf, int x, int y, int color);
+void	color_screen(t_fdf *fdf, int color);
 int		close_window(void *param);
-int		key_hook(int keycode, t_fdf *fdf);
 void	mlx_initialize(t_fdf *fdf);
 void	hook_n_loop(t_fdf *fdf);
 int		input_validation(int argc, char **argv);
@@ -42,7 +42,7 @@ int	main(int argc, char **argv)
 
 	if ((input_validation(argc, argv) != 1) || (read_map(argv[1]) == -1))
 		exit (1);
-	fdf.win_width = 1920 / 2;
+	fdf.win_width = 1920;// / 2;
 	fdf.win_height = 1080 - 40;
 	mlx_initialize(&fdf);
 	map_initialize(&fdf, argv[1]);
@@ -55,6 +55,16 @@ void	draw_map(t_fdf *fdf)
 	int	y;
 	int	x;
 
+	fdf->center_x = fdf->trans_x + (fdf->win_width / 2)
+		- ((fdf->edge_len * fdf->map_length / 2)
+			* cos(((fdf->angle) * M_PI) / 180)
+			+ (fdf->edge_len * fdf->map_width / 2)
+			* sin(((fdf->angle) * M_PI) / 180));
+	fdf->center_y = fdf->trans_y + (fdf->win_height / 2)
+		- (-(fdf->edge_len * fdf->map_length / 2)
+			* sin(((fdf->angle) * M_PI) / 180)
+			+ (fdf->edge_len * fdf->map_width / 2)
+			* cos(((fdf->angle) * M_PI) / 180));
 	y = 0;
 	while (y < fdf->map_width)
 	{
@@ -77,26 +87,38 @@ void	draw_all_the_lines(t_fdf *fdf, int y, int x)
 
 	if (x < fdf->map_length - 1)
 	{
-		start = (t_point){(fdf->win_width / 2) + (fdf->edge_len * x)*cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y)*sin(((fdf->angle) * M_PI) / 180),
-			(fdf->win_height / 2) - (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle) * M_PI) / 180) - (zz(fdf, y, x) / 8),
+		start = (t_point){(fdf->center_x) + (fdf->edge_len * x)
+			* cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y)
+			* sin(((fdf->angle) * M_PI) / 180), (fdf->center_y) - (fdf->edge_len
+				* x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y)
+			* cos(((fdf->angle) * M_PI) / 180) - (zz(fdf, y, x) / 8),
 			zz(fdf, y, x)};
-		end = (t_point){(fdf->win_width / 2) + (fdf->edge_len * (x + 1))*cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y)*sin(((fdf->angle) * M_PI) / 180),
-			(fdf->win_height / 2) - (fdf->edge_len * (x + 1)) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle) * M_PI) / 180) - (zz(fdf, y, x + 1) / 8),
-			zz(fdf, y, x + 1)};
+		end = (t_point){(fdf->center_x) + (fdf->edge_len * (x + 1)) * cos(((
+						fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * sin((
+					(fdf->angle) * M_PI) / 180), (fdf->center_y)
+		- (fdf->edge_len * (x + 1)) * sin(((fdf->angle) * M_PI) / 180)
+		+ (fdf->edge_len * y) * cos(((fdf->angle) * M_PI) / 180) - (
+				zz(fdf, y, x + 1) / 8), zz(fdf, y, x + 1)};
 		if ((start.x != end.x) || (start.y != end.y))
 			draw_point_to_point(fdf, start, end);
 	}
-	//if (y < fdf->map_width - 1)
-	//{
-	//	start = (t_point){(fdf->win_width / 2) + fdf->edge_len * x - fdf->edge_len * y,
-	//		(fdf->win_height / 2) + fdf->edge_len * x + fdf->edge_len * y - (zz(fdf, y, x) / 8),
-	//		zz(fdf, y, x)};
-	//	end = (t_point){(fdf->win_width / 2) + fdf->edge_len * x - fdf->edge_len * y - fdf->edge_len,
-	//		(fdf->win_height / 2) + fdf->edge_len * x + fdf->edge_len * y + fdf->edge_len - (zz(fdf, y + 1, x) / 8),
-	//		zz(fdf, y + 1, x)};
-	//	if ((start.x != end.x) || (start.y != end.y))
-	//		draw_point_to_point(fdf, start, end);
-	//}
+	if (y < fdf->map_width - 1)
+	{
+		start = (t_point){(fdf->center_x) + (fdf->edge_len * x)
+			* cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y)
+			* sin(((fdf->angle) * M_PI) / 180), (fdf->center_y)
+			- (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180)
+			+ (fdf->edge_len * y) * cos(((fdf->angle) * M_PI) / 180)
+			- (zz(fdf, y, x) / 8), zz(fdf, y, x)};
+		end = (t_point){(fdf->center_x) + (fdf->edge_len * x)
+			* cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * (y + 1))
+			* sin(((fdf->angle) * M_PI) / 180), (fdf->center_y)
+			- (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180)
+			+ (fdf->edge_len * (y + 1)) * cos(((fdf->angle) * M_PI) / 180)
+			- (zz(fdf, y + 1, x) / 8), zz(fdf, y + 1, x)};
+		if ((start.x != end.x) || (start.y != end.y))
+			draw_point_to_point(fdf, start, end);
+	}
 }
 
 // linear interpolation
@@ -280,7 +302,11 @@ void	map_initialize(t_fdf *fdf, char *map_name)
 	map_the_map(fdf, map_name);
 	map_the_peaks(fdf);
 	fdf->angle = 45;
-	fdf->edge_len = 16; //prototype. Works well for 42. Needs to be calculated
+	fdf->edge_len = 20; //40 works well for 42. Needs to be calculated
+	fdf->center_x = fdf->win_width / 2;
+	fdf->center_y = fdf->win_height / 2;
+	fdf->trans_x = 0;
+	fdf->trans_y = 0;
 }
 
 void	map_the_map(t_fdf *fdf, char *map_file)
@@ -382,7 +408,6 @@ void	hook_n_loop(t_fdf *fdf)
 {
 	mlx_key_hook(fdf->mlx_window, handle_input, fdf);
 	mlx_hook(fdf->mlx_window, 17, 0, close_window, fdf);
-	mlx_hook(fdf->mlx_window, 2, 1L << 0, key_hook, fdf);
 	mlx_loop(fdf->mlx_ptr);
 }
 
@@ -411,18 +436,6 @@ void	mlx_initialize(t_fdf *fdf)
 			fdf->img, &fdf->bits_per_pixel, &fdf->line_length, &fdf->endian);
 }
 
-int	key_hook(int keysym, t_fdf *fdf)
-{
-	if (keysym == 32)
-	{
-		fdf->angle++;
-		if (fdf->angle >= 360)
-			fdf->angle = 0;
-		ft_printf("angle: %i\n", fdf->angle);
-	}
-	return (0);
-}
-
 int	close_window(void *param)
 {
 	t_fdf	*fdf;
@@ -434,12 +447,11 @@ int	close_window(void *param)
 	exit(0);
 }
 
-//ft_printf("Event: Pressed key %d\n", keysym);
 int	handle_input(int keysym, t_fdf *fdf)
 {
 	if (keysym == 65307)
 	{
-		ft_printf("Event: Pressed key %d (ESC)\n", keysym);
+		ft_printf("Event: Pressed key %d (ESC)\n", keysym);//
 		mlx_destroy_image(fdf->mlx_ptr, fdf->img);
 		mlx_destroy_window(fdf->mlx_ptr, fdf->mlx_window);
 		mlx_destroy_display(fdf->mlx_ptr);
@@ -476,12 +488,49 @@ void	color_screen(t_fdf *fdf, int color)
 
 void	f(int keysym, t_fdf *fdf)
 {
-	if (keysym == 114)
-		color_screen(fdf, encode_rgb(255, 0, 0));
+	ft_printf("Event: Pressed key %d\n", keysym);//
+	if (keysym == 113)
+	{
+		fdf->angle -= 15;
+		if (fdf->angle < 0)
+			fdf->angle += 360;
+		ft_printf("angle: %i\n", fdf->angle);
+		color_screen(fdf, 0);
+	}
 	if (keysym == 103)
 		color_screen(fdf, encode_rgb(0, 255, 0));
 	if (keysym == 98)
 		color_screen(fdf, encode_rgb(0, 0, 255));
+	if (keysym == 112)
+		color_screen(fdf, encode_rgb(0, 0, 0));
+	if (keysym == 100)
+	{
+		fdf->trans_x += 42;
+		color_screen(fdf, 0);
+	}
+	if (keysym == 97)
+	{
+		fdf->trans_x -= 42;
+		color_screen(fdf, 0);
+	}
+	if (keysym == 115)
+	{
+		fdf->trans_y += 42;
+		color_screen(fdf, 0);
+	}
+	if (keysym == 119)
+	{
+		fdf->trans_y -= 42;
+		color_screen(fdf, 0);
+	}
+	if (keysym == 101)
+	{
+		fdf->angle += 15;
+		if (fdf->angle >= 360)
+			fdf->angle = 0;
+		ft_printf("angle: %i\n", fdf->angle);
+		color_screen(fdf, 0);
+	}
 	draw_map(fdf);
 	mlx_put_image_to_window(fdf->mlx_ptr, fdf->mlx_window, fdf->img, 0, 0);
 }

@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 09:56:50 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/14 19:51:38 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/14 23:09:45 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,10 @@ typedef struct s_fdf
 	int		map_lowest;
 	int		angle;
 	int		edge_len;
+	int		center_x;
+	int		center_y;
+	int		trans_x;
+	int		trans_y;
 }			t_fdf;
 
 //	x:	axis
