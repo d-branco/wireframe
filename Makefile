@@ -6,32 +6,34 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 08:19:06 by abessa-m          #+#    #+#              #
-#    Updated: 2025/02/15 19:34:07 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/02/15 21:37:18 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:= fdf
-NAME-BONUS	:= fdf
+#NAME-BONUS	:= fdf
 LIBFT		:= libft/libft.a -L mlx_linux/libmlx_Linux.a
-#################################################################### Compiler  #
+##################################################################### Compiler #
 CC			:= cc
 CFLAGS		:= -g -lm -Wall -Wextra -Werror
 MLXFLAGS	:= \
 	-Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lmlx -lXext -lX11 -lm -lz
-########################################################## Intermidiate steps  #
+########################################################### Intermidiate steps #
 RM			:= rm -f
 AR			:= ar rcs
-######################################################### Objects and Headers  #
+########################################################## Objects and Headers #
 #HEADERS		= fdf.h fdf_bonus.h
 SRCS		= \
-	fdf.c fdf-init.c fdf-close.c \
-	fdf-map.c fdf-line.c fdf-draw.c 
+	fdf.c \
+	fdf-init-map.c fdf-init-validation.c \
+	fdf-window.c fdf-key-input.c \
+	fdf-color.c fdf-draw.c \
+	fdf-isometric.c fdf-military.c 
 OBJS		= $(SRCS:.c=.o)
 SRCS-BONUS	= \
-	fdf_bonus.c \
-	fdf-key-input_bonus.c 
+	
 OBJS-BONUS	= $(SRCS-BONUS:.c=.o)
-##################################################################### Targets  #
+###################################################################### Targets #
 all: $(LIBFT) $(NAME)
 
 $(NAME): $(OBJS) $(LIBFT)
@@ -46,7 +48,7 @@ $(LIBFT):
 	&& make --no-print-directory -C mlx_linux/ 
 
 bonus: $(OBJS-BONUS) $(LIBFT)
-	@$(CC) $(CFLAGS) $(OBJS-BONUS) $(LIBFT) $(MLXFLAGS) -o $(NAME-BONUS) \
+	@$(CC) $(CFLAGS) $(OBJS) $(OBJS-BONUS) $(LIBFT) $(MLXFLAGS) -o $(NAME) \
 	&& echo "$(GRAY)Compiled:$(COR) $(OBJS-BONUS)"
 
 clean:
@@ -69,15 +71,12 @@ GRAY	= \033[1;90m# gray
 YELLOW	= \033[1;93m# yellow
 ######################################################################### Test #
 #Recomendation: alias t="make test"
-test: bonus
-	@echo -n "$(YELLOW)" ; \
-	norminette *.c | grep -v -E \
-	"Too many functions in file|Comment is invalid in this scope" \
-	| grep Error ; echo -n "$(COR)" ; \
-	valgrind --quiet -s --leak-check=full --track-origins=yes \
-	./fdf test_maps/42.fdf && \
-	echo "$(GRAY)Return value: $$?$(COR)" ; \
-	$(RM) *.o *.gch ; 
-
-#	./push_swap "0 2 1" ; \
+#test: all
+#	@echo -n "$(YELLOW)" ; \
+#	norminette *.c | grep -v -E \
+#	"Too many functions in file|Comment is invalid in this scope" \
+#	| grep Error ; echo -n "$(COR)" ; \
+#	valgrind --quiet -s --leak-check=full --track-origins=yes \
+#	./fdf test_maps/42.fdf && \
 #	echo "$(GRAY)Return value: $$?$(COR)" ; \
+#	$(RM) *.o *.gch ; 

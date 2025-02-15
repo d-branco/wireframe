@@ -5,80 +5,89 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/11 14:13:59 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/14 16:10:27 by abessa-m         ###   ########.fr       */
+/*   Created: 2025/02/15 21:20:49 by abessa-m          #+#    #+#             */
+/*   Updated: 2025/02/15 21:36:22 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf.h"
 
-static void	draw_all_the_lines(t_fdf *fdf, int y, int x);
-static int	zz(t_fdf *fdf, int y, int x);
+/*
+//t_point	start;
+//t_point	end;
+//
+//start = (t_point)
+//{(int)((fdf->win_width / 2) - 5), (int)(fdf->win_height / 2), 0};
+//end = (t_point)
+//{(int)((fdf->win_width / 2) + 5 + 1), (int)(fdf->win_height / 2), 0};
+//draw_point_to_point(fdf, start, end);
+//start = (t_point)
+//{(int)(fdf->win_width / 2), (int)((fdf->win_height / 2) - 5), 0};
+//end = (t_point)
+//{(int)(fdf->win_width / 2), (int)((fdf->win_height / 2) + 5 + 1), 0};
+//draw_point_to_point(fdf, start, end);
+//ft_printf("Center point at "
+//	"x: %i    y: %i\n", (fdf->win_width / 2), (fdf->win_height / 2));
+*/
+void	draw_center(t_fdf *fdf)
+{
+	draw_map(fdf);
+	mlx_put_image_to_window(fdf->mlx_ptr, fdf->mlx_window, fdf->img, 0, 0);
+	return ;
+}
 
 void	draw_map(t_fdf *fdf)
 {
-	int	y;
-	int	x;
-
-	y = 0;
-	while (y < fdf->map_width)
-	{
-		x = 0;
-		ft_printf("map: ");
-		while (x < fdf->map_length)
-		{
-			ft_printf("%3i", fdf->map[y][x]);
-			draw_all_the_lines(fdf, y, x);
-			x++;
-		}
-		ft_printf("\n");
-		y++;
-	}
+	if (fdf->projection == 0)
+		projection_isometric(fdf);
+	else if (fdf->projection == 1)
+		projection_paralel(fdf);
 }
 
-//ft_printf("Start    x: %i,    y: %i,    z: %i\n", start.x, start.y, start.z);
-//ft_printf("End      x: %i,    y: %i,    z: %i\n", end.x, end.y, end.z);
-static void	draw_all_the_lines(t_fdf *fdf, int y, int x)
+/*typedef struct s_point
 {
-	t_point	start;
-	t_point	end;
-
-	if (x < fdf->map_length - 1)
-	{
-		start = (t_point){16 * x + 430 - 16 * y,
-			16 * x + 16 * y + 40 - (zz(fdf, y, x) / 8), zz(fdf, y, x)};
-		end = (t_point){16 * x + 430 - 16 * y + 16, 16 * x + 16 * y + 40 + 16
-			- (zz(fdf, y, x + 1) / 8), zz(fdf, y, x + 1)};
-		if ((start.x != end.x) || (start.y != end.y))
-			draw_point_to_point(fdf, start, end);
-	}
-	if (y < fdf->map_width - 1)
-	{
-		start = (t_point){16 * x + 430 - 16 * y,
-			16 * x + 16 * y + 40 - (zz(fdf, y, x) / 8), zz(fdf, y, x)};
-		end = (t_point){16 * x + 430 - 16 * y - 16, 16 * x + 16 * y + 40 + 16
-			- (zz(fdf, y + 1, x) / 8), zz(fdf, y + 1, x)};
-		if ((start.x != end.x) || (start.y != end.y))
-			draw_point_to_point(fdf, start, end);
-	}
-}
-
-// linear interpolation
-static int	zz(t_fdf *fdf, int y, int x)
+	int		x;
+	int		y;
+	int		z;
+}			t_point;*/
+void	draw_point_to_point(t_fdf *fdf, t_point start, t_point end)
 {
-	int	zz;
+	int		max_steps;
+	double	x;
+	double	y;
+	int		z;
+	int		current_step;
 
-	zz = ((fdf->map[y][x] - fdf->map_lowest) * 255)
-		/ (fdf->map_highest - fdf->map_lowest);
-	if (zz < 0)
-		zz = 0;
-	if (zz > 255)
-		zz = 255;
-	return (zz);
+	if (abs(end.x - start.x) >= abs(end.y - start.y))
+		max_steps = abs(end.x - start.x);
+	else
+		max_steps = abs(end.y - start.y);
+	x = start.x;
+	y = start.y;
+	z = paint_zz(start.z);
+	current_step = 0;
+	while (current_step <= max_steps)
+	{
+		our_pixel_put(fdf, x, y, z);
+		x = start.x + (current_step * (end.x - start.x) / max_steps);
+		y = start.y + (current_step * (end.y - start.y) / max_steps);
+		z = paint_zz(start.z + (current_step * (end.z - start.z) / max_steps));
+		current_step++;
+	}
 }
 
-/*
-	start = (t_point){400, 200, 255};
-	end = (t_point){600, 200, 255};
-	draw_point_to_point(fdf, start, end);
-*/
+int	paint_zz(int green)
+{
+	int	red;
+	int	blue;
+
+	if (green < 0)
+		green = 0;
+	if (green > 255)
+		green = 255;
+	green = green / 2 + 127;
+	red = 255 - green;
+	green = green;
+	blue = 255 - green;
+	return ((red << 16) | (green << 8) | blue);
+}

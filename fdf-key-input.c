@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf-key-input_bonus.c                              :+:      :+:    :+:   */
+/*   fdf-key-input.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 19:12:50 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/15 19:37:57 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/15 21:09:52 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf_bonus.h"
+#include "fdf.h"
 
 //ft_printf("Event: Pressed key %d (ESC)\n", keysym);
 int	handle_input(int keysym, t_fdf *fdf)
