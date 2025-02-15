@@ -6,13 +6,13 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 08:19:06 by abessa-m          #+#    #+#              #
-#    Updated: 2025/02/14 15:42:07 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/02/15 11:11:59 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		:= fdf
 NAME-BONUS	:= fdf
-LIBFT		:= libft/libft.a mlx_linux/libmlx_Linux.a
+LIBFT		:= libft/libft.a -L mlx_linux/libmlx_Linux.a
 #################################################################### Compiler  #
 CC			:= cc
 CFLAGS		:= -g -lm -Wall -Wextra -Werror

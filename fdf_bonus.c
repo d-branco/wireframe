@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:38:36 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/15 11:00:41 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/15 11:44:04 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,12 +90,10 @@ void	draw__lines_isometric_projection(t_fdf *fdf, int y, int x)
 
 	if (x < fdf->map_length - 1)
 	{
-		start = (t_point){
-			(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * sin(((fdf->angle + 30) * M_PI) / 180),
+		start = (t_point){(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * sin(((fdf->angle + 30) * M_PI) / 180),
 			(fdf->center_y) - (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle + 30) * M_PI) / 180) - (zz(fdf, y, x) / 8),
 			zz(fdf, y, x)};
-		end = (t_point){
-			(fdf->center_x) + (fdf->edge_len * (x + 1)) * cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * sin(((fdf->angle + 30) * M_PI) / 180),
+		end = (t_point){(fdf->center_x) + (fdf->edge_len * (x + 1)) * cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * sin(((fdf->angle + 30) * M_PI) / 180),
 			(fdf->center_y) - (fdf->edge_len * (x + 1)) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle + 30) * M_PI) / 180) - (zz(fdf, y, x + 1) / 8),
 			zz(fdf, y, x + 1)};
 		if ((start.x != end.x) || (start.y != end.y))
@@ -103,12 +101,10 @@ void	draw__lines_isometric_projection(t_fdf *fdf, int y, int x)
 	}
 	if (y < fdf->map_width - 1)
 	{
-		start = (t_point){
-			(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * sin(((fdf->angle + 30) * M_PI) / 180),
+		start = (t_point){(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * sin(((fdf->angle + 30) * M_PI) / 180),
 			(fdf->center_y) - (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle + 30) * M_PI) / 180) - (zz(fdf, y, x) / 8),
 			zz(fdf, y, x)};
-		end = (t_point){
-			(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * (y + 1)) * sin(((fdf->angle + 30) * M_PI) / 180),
+		end = (t_point){(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * (y + 1)) * sin(((fdf->angle + 30) * M_PI) / 180),
 			(fdf->center_y) - (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * (y + 1)) * cos(((fdf->angle + 30) * M_PI) / 180) - (zz(fdf, y + 1, x) / 8),
 			zz(fdf, y + 1, x)};
 		if ((start.x != end.x) || (start.y != end.y))
@@ -369,12 +365,12 @@ void	map_initialize(t_fdf *fdf, char *map_name)
 	map_the_map(fdf, map_name);
 	map_the_peaks(fdf);
 	fdf->angle = 30; // 30 to start in isometric
-	fdf->edge_len = 20; //40 works well for 42. Needs to be calculated
 	fdf->center_x = fdf->win_width / 2;
 	fdf->center_y = fdf->win_height / 2;
 	fdf->trans_x = 0;
 	fdf->trans_y = 0;
 	fdf->projection = 0;
+	fdf->edge_len = (int)(fdf->win_width / ((fdf->map_length + 2) * cos(M_PI / 6) + (fdf->map_width + 2) * sin(M_PI / 6)));
 }
 
 void	map_the_map(t_fdf *fdf, char *map_file)
@@ -601,6 +597,30 @@ void	f(int keysym, t_fdf *fdf)
 	if (keysym == 119)
 	{
 		fdf->trans_y -= 42;
+		color_screen(fdf, 0);
+	}
+	if (keysym == 105)
+	{
+		fdf->edge_len += 1;
+		color_screen(fdf, 0);
+	}
+	if (keysym == 111)
+	{
+		fdf->edge_len -= 1;
+		if (fdf->edge_len <= 0)
+			fdf->edge_len = 1;
+		color_screen(fdf, 0);
+	}
+	if (keysym == 59)
+	{
+		fdf->edge_len += 42;
+		color_screen(fdf, 0);
+	}
+	if (keysym == 39)
+	{
+		fdf->edge_len -= 42;
+		if (fdf->edge_len <= 0)
+			fdf->edge_len = 1;
 		color_screen(fdf, 0);
 	}
 	if (keysym == 101)
