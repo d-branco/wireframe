@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/10 09:56:50 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/15 10:50:41 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/15 20:52:10 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,5 +62,43 @@ typedef struct s_point
 	int	y;
 	int	z;
 }			t_point;
+
+//fdf-key-input_bonus.c
+int		handle_input(int keysym, t_fdf *fdf);
+void	redraw_map(int keysym, t_fdf *fdf);
+void	redraw_map_redux(int keysym, t_fdf *fdf);
+void	redraw_map_triplex(int keysym, t_fdf *fdf);
+void	redraw_map_tetraplex(int keysym, t_fdf *fdf);
+
+//main
+int		handle_input(int keysym, t_fdf *fdf);
+int		encode_rgb(unsigned char red, unsigned char green, unsigned char blue);
+void	f(int keysym, t_fdf *fdf);
+void	our_pixel_put(t_fdf *fdf, int x, int y, int color);
+void	color_screen(t_fdf *fdf, int color);
+int		close_window(void *param);
+void	mlx_initialize(t_fdf *fdf);
+void	hook_n_loop(t_fdf *fdf);
+int		input_validation(int argc, char **argv);
+int		validate_map_name(char **argv);
+void	map_the_map(t_fdf *fdf, char *map_file);
+void	map_the_peaks(t_fdf *fdf);
+void	map_initialize(t_fdf *fdf, char *map_name);
+int		read_map(char *map_file);
+int		get_map_length(char *map_file);
+int		get_map_width(char *map_file);
+int		paint_zz(int green);
+void	draw_center(t_fdf *fdf);
+void	draw_point_to_point(t_fdf *fdf, t_point start, t_point end);
+void	draw_map(t_fdf *fdf);
+void	draw_lines_paralel_projection(t_fdf *fdf, int y, int x);
+int		zz(t_fdf *fdf, int y, int x);
+void	projection_paralel(t_fdf *fdf);
+void	projection_isometric(t_fdf *fdf);
+void	draw__lines_isometric_projection(t_fdf *fdf, int y, int x);
+void	formula_x_pp(t_fdf *fdf, int y, int x);
+void	formula_y_pp(t_fdf *fdf, int y, int x);
+void	formula_x_ip(t_fdf *fdf, int y, int x);
+void	formula_y_ip(t_fdf *fdf, int y, int x);
 
 #endif

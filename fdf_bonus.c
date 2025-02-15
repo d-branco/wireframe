@@ -6,37 +6,11 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:38:36 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/15 18:37:28 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/15 20:51:46 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fdf_bonus.h"
-
-int		handle_input(int keysym, t_fdf *fdf);
-int		encode_rgb(unsigned char red, unsigned char green, unsigned char blue);
-void	f(int keysym, t_fdf *fdf);
-void	our_pixel_put(t_fdf *fdf, int x, int y, int color);
-void	color_screen(t_fdf *fdf, int color);
-int		close_window(void *param);
-void	mlx_initialize(t_fdf *fdf);
-void	hook_n_loop(t_fdf *fdf);
-int		input_validation(int argc, char **argv);
-int		validate_map_name(char **argv);
-void	map_the_map(t_fdf *fdf, char *map_file);
-void	map_the_peaks(t_fdf *fdf);
-void	map_initialize(t_fdf *fdf, char *map_name);
-int		read_map(char *map_file);
-int		get_map_length(char *map_file);
-int		get_map_width(char *map_file);
-int		paint_zz(int green);
-void	draw_center(t_fdf *fdf);
-void	draw_point_to_point(t_fdf *fdf, t_point start, t_point end);
-void	draw_map(t_fdf *fdf);
-void	draw_lines_paralel_projection(t_fdf *fdf, int y, int x);
-int		zz(t_fdf *fdf, int y, int x);
-void	projection_paralel(t_fdf *fdf);
-void	projection_isometric(t_fdf *fdf);
-void	draw__lines_isometric_projection(t_fdf *fdf, int y, int x);
 
 //mlx_pixel_put(fdf.mlx_ptr, fdf.mlx_window, 0, 0, 0xFF0000);
 int	main(int argc, char **argv)
@@ -45,11 +19,11 @@ int	main(int argc, char **argv)
 
 	if ((input_validation(argc, argv) != 1) || (read_map(argv[1]) == -1))
 		exit (1);
-	fdf.win_width = 1920;// / 2;
+	fdf.win_width = 1920;
 	fdf.win_height = 1080 - 40;
 	mlx_initialize(&fdf);
 	map_initialize(&fdf, argv[1]);
-	draw_center(&fdf);//
+	draw_center(&fdf);
 	hook_n_loop(&fdf);
 }
 
@@ -67,9 +41,15 @@ void	projection_isometric(t_fdf *fdf)
 	int	x;
 
 	fdf->center_x = fdf->trans_x + (fdf->win_width / 2)
-		- ((fdf->edge_len * fdf->map_length / 2) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * fdf->map_width / 2) * sin(((fdf->angle + 30) * M_PI) / 180));
+		- ((fdf->edge_len * fdf->map_length / 2)
+			* cos(((fdf->angle) * M_PI) / 180)
+			- (fdf->edge_len * fdf->map_width / 2)
+			* sin(((fdf->angle + 30) * M_PI) / 180));
 	fdf->center_y = fdf->trans_y + (fdf->win_height / 2)
-		- (+ (fdf->edge_len * fdf->map_length / 2) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * fdf->map_width / 2) * cos(((fdf->angle + 30) * M_PI) / 180));
+		- (+ (fdf->edge_len * fdf->map_length / 2)
+			* sin(((fdf->angle) * M_PI) / 180)
+			+ (fdf->edge_len * fdf->map_width / 2)
+			* cos(((fdf->angle + 30) * M_PI) / 180));
 	y = 0;
 	while (y < fdf->map_width)
 	{
@@ -85,35 +65,60 @@ void	projection_isometric(t_fdf *fdf)
 
 void	draw__lines_isometric_projection(t_fdf *fdf, int y, int x)
 {
+	if (x < fdf->map_length - 1)
+		formula_x_ip(fdf, y, x);
+	if (y < fdf->map_width - 1)
+		formula_y_ip(fdf, y, x);
+}
+
+void	formula_x_ip(t_fdf *fdf, int y, int x)
+{
 	t_point	start;
 	t_point	end;
 
-	if (x < fdf->map_length - 1)
-	{
-		start = (t_point){
-			(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y) * sin(((fdf->angle + 30) * M_PI) / 180),
-			(fdf->center_y) + (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle + 30) * M_PI) / 180) - ((zz(fdf, y, x) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
-			zz(fdf, y, x)};
-		end = (t_point){
-			(fdf->center_x) + (fdf->edge_len * (x + 1)) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y) * sin(((fdf->angle + 30) * M_PI) / 180),
-			(fdf->center_y) + (fdf->edge_len * (x + 1)) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle + 30) * M_PI) / 180) - ((zz(fdf, y, x + 1) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
-			zz(fdf, y, x + 1)};
-		if ((start.x != end.x) || (start.y != end.y))
-			draw_point_to_point(fdf, start, end);
-	}
-	if (y < fdf->map_width - 1)
-	{
-		start = (t_point){
-			(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y) * sin(((fdf->angle + 30) * M_PI) / 180),
-			(fdf->center_y) + (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle + 30) * M_PI) / 180) - ((zz(fdf, y, x) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
-			zz(fdf, y, x)};
-		end = (t_point){
-			(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * (y + 1)) * sin(((fdf->angle + 30) * M_PI) / 180),
-			(fdf->center_y) + (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * (y + 1)) * cos(((fdf->angle + 30) * M_PI) / 180) - ((zz(fdf, y + 1, x) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
-			zz(fdf, y + 1, x)};
-		if ((start.x != end.x) || (start.y != end.y))
-			draw_point_to_point(fdf, start, end);
-	}
+	start = (t_point){(fdf->center_x) + (fdf->edge_len * x)
+		* cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y)
+		* sin(((fdf->angle + 30) * M_PI) / 180),
+		(fdf->center_y) + (fdf->edge_len * x)
+		* sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y)
+		* cos(((fdf->angle + 30) * M_PI) / 180) - ((zz(fdf, y, x)
+				* sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
+		zz(fdf, y, x)};
+	end = (t_point){(fdf->center_x) + (fdf->edge_len * (x + 1))
+		* cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y)
+		* sin(((fdf->angle + 30) * M_PI) / 180),
+		(fdf->center_y) + (fdf->edge_len * (x + 1))
+		* sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y)
+		* cos(((fdf->angle + 30) * M_PI) / 180) - ((zz(fdf, y, x + 1)
+				* sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
+		zz(fdf, y, x + 1)};
+	if ((start.x != end.x) || (start.y != end.y))
+		draw_point_to_point(fdf, start, end);
+}
+
+void	formula_y_ip(t_fdf *fdf, int y, int x)
+{
+	t_point	start;
+	t_point	end;
+
+	start = (t_point){(fdf->center_x) + (fdf->edge_len * x)
+		* cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y)
+		* sin(((fdf->angle + 30) * M_PI) / 180),
+		(fdf->center_y) + (fdf->edge_len * x)
+		* sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y)
+		* cos(((fdf->angle + 30) * M_PI) / 180) - ((zz(fdf, y, x)
+				* sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
+		zz(fdf, y, x)};
+	end = (t_point){(fdf->center_x) + (fdf->edge_len * x)
+		* cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * (y + 1))
+		* sin(((fdf->angle + 30) * M_PI) / 180),
+		(fdf->center_y) + (fdf->edge_len * x)
+		* sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * (y + 1))
+		* cos(((fdf->angle + 30) * M_PI) / 180) - ((zz(fdf, y + 1, x)
+				* sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
+		zz(fdf, y + 1, x)};
+	if ((start.x != end.x) || (start.y != end.y))
+		draw_point_to_point(fdf, start, end);
 }
 
 void	projection_paralel(t_fdf *fdf)
@@ -148,35 +153,59 @@ void	projection_paralel(t_fdf *fdf)
 //ft_printf("End      x: %i,    y: %i,    z: %i\n", end.x, end.y, end.z);
 void	draw_lines_paralel_projection(t_fdf *fdf, int y, int x)
 {
+	if (x < fdf->map_length - 1)
+		formula_x_pp(fdf, y, x);
+	if (y < fdf->map_width - 1)
+		formula_y_pp(fdf, y, x);
+}
+
+void	formula_y_pp(t_fdf *fdf, int y, int x)
+{
 	t_point	start;
 	t_point	end;
 
-	if (x < fdf->map_length - 1)
-	{
-		start = (t_point){
-			(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y) * sin(((fdf->angle) * M_PI) / 180),
-			(fdf->center_y) + (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle) * M_PI) / 180) - ((zz(fdf, y, x) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
-			zz(fdf, y, x)};
-		end = (t_point){
-			(fdf->center_x) + (fdf->edge_len * (x + 1)) * cos((( fdf->angle) * M_PI) / 180) - (fdf->edge_len * y) * sin(( (fdf->angle) * M_PI) / 180),
-			(fdf->center_y) + (fdf->edge_len * (x + 1)) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle) * M_PI) / 180) - ((zz(fdf, y, x + 1) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
-			zz(fdf, y, x + 1)};
-		if ((start.x != end.x) || (start.y != end.y))
-			draw_point_to_point(fdf, start, end);
-	}
-	if (y < fdf->map_width - 1)
-	{
-		start = (t_point){
-			(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y) * sin(((fdf->angle) * M_PI) / 180),
-			(fdf->center_y) + (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle) * M_PI) / 180) - ((zz(fdf, y, x) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
-			zz(fdf, y, x)};
-		end = (t_point){
-			(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * (y + 1)) * sin(((fdf->angle) * M_PI) / 180),
-			(fdf->center_y) + (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * (y + 1)) * cos(((fdf->angle) * M_PI) / 180) - ((zz(fdf, y + 1, x) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
-			zz(fdf, y + 1, x)};
-		if ((start.x != end.x) || (start.y != end.y))
-			draw_point_to_point(fdf, start, end);
-	}
+	start = (t_point){(fdf->center_x) + (fdf->edge_len * x)
+		* cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y)
+		* sin(((fdf->angle) * M_PI) / 180), (fdf->center_y)
+		+ (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180)
+		+ (fdf->edge_len * y) * cos(((fdf->angle) * M_PI) / 180)
+		- ((zz(fdf, y, x) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
+		zz(fdf, y, x)};
+	end = (t_point){(fdf->center_x) + (fdf->edge_len * x)
+		* cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len
+			* (y + 1)) * sin(((fdf->angle) * M_PI) / 180),
+		(fdf->center_y) + (fdf->edge_len * x)
+		* sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * (y + 1))
+		* cos(((fdf->angle) * M_PI) / 180) - ((zz(fdf, y + 1, x)
+				* sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
+		zz(fdf, y + 1, x)};
+	if ((start.x != end.x) || (start.y != end.y))
+		draw_point_to_point(fdf, start, end);
+}
+
+void	formula_x_pp(t_fdf *fdf, int y, int x)
+{
+	t_point	start;
+	t_point	end;
+
+	start = (t_point){(fdf->center_x) + (fdf->edge_len * x)
+		* cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y)
+		* sin(((fdf->angle) * M_PI) / 180),
+		(fdf->center_y) + (fdf->edge_len * x)
+		* sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y)
+		* cos(((fdf->angle) * M_PI) / 180) - ((zz(fdf, y, x)
+				* sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
+		zz(fdf, y, x)};
+	end = (t_point){(fdf->center_x) + (fdf->edge_len * (x + 1))
+		* cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y)
+		* sin(((fdf->angle) * M_PI) / 180),
+		(fdf->center_y) + (fdf->edge_len * (x + 1))
+		* sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y)
+		* cos(((fdf->angle) * M_PI) / 180) - ((zz(fdf, y, x + 1)
+				* sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
+		zz(fdf, y, x + 1)};
+	if ((start.x != end.x) || (start.y != end.y))
+		draw_point_to_point(fdf, start, end);
 }
 
 // linear interpolation
@@ -194,24 +223,24 @@ int	zz(t_fdf *fdf, int y, int x)
 }
 
 /*
+//t_point	start;
+//t_point	end;
+//
+//start = (t_point)
+//{(int)((fdf->win_width / 2) - 5), (int)(fdf->win_height / 2), 0};
+//end = (t_point)
+//{(int)((fdf->win_width / 2) + 5 + 1), (int)(fdf->win_height / 2), 0};
+//draw_point_to_point(fdf, start, end);
+//start = (t_point)
+//{(int)(fdf->win_width / 2), (int)((fdf->win_height / 2) - 5), 0};
+//end = (t_point)
+//{(int)(fdf->win_width / 2), (int)((fdf->win_height / 2) + 5 + 1), 0};
+//draw_point_to_point(fdf, start, end);
+//ft_printf("Center point at "
+//	"x: %i    y: %i\n", (fdf->win_width / 2), (fdf->win_height / 2));
 */
 void	draw_center(t_fdf *fdf)
 {
-	t_point	start;
-	t_point	end;
-	
-	start = (t_point)
-	{(int)((fdf->win_width / 2) - 5), (int)(fdf->win_height / 2), 0};
-	end = (t_point)
-	{(int)((fdf->win_width / 2) + 5 + 1), (int)(fdf->win_height / 2), 0};
-	draw_point_to_point(fdf, start, end);
-	start = (t_point)
-	{(int)(fdf->win_width / 2), (int)((fdf->win_height / 2) - 5), 0};
-	end = (t_point)
-	{(int)(fdf->win_width / 2), (int)((fdf->win_height / 2) + 5 + 1), 0};
-	draw_point_to_point(fdf, start, end);
-	ft_printf("Center point at "
-		"x: %i    y: %i\n", (fdf->win_width / 2), (fdf->win_height / 2));
 	draw_map(fdf);
 	mlx_put_image_to_window(fdf->mlx_ptr, fdf->mlx_window, fdf->img, 0, 0);
 	return ;
@@ -340,6 +369,7 @@ int	get_map_width(char *map_file)
 	return (width);
 }
 
+// 30 deegrees - to start in isometric
 void	map_initialize(t_fdf *fdf, char *map_name)
 {
 	int	i;
@@ -353,15 +383,12 @@ void	map_initialize(t_fdf *fdf, char *map_name)
 	{
 		fdf->map[i] = (int *) ft_calloc(fdf->map_length, sizeof(int));
 		if (fdf->map[i] == NULL)
-		{
-			ft_printf("Error allocating map!\n");
 			exit (5);
-		}
 		i++;
 	}
 	map_the_map(fdf, map_name);
 	map_the_peaks(fdf);
-	fdf->angle = 30; // 30 to start in isometric
+	fdf->angle = 30;
 	fdf->center_x = fdf->win_width / 2;
 	fdf->center_y = fdf->win_height / 2;
 	fdf->trans_x = 0;
@@ -509,20 +536,14 @@ int	close_window(void *param)
 	exit(0);
 }
 
-int	handle_input(int keysym, t_fdf *fdf)
+void	our_pixel_put(t_fdf *fdf, int x, int y, int color)
 {
-	if (keysym == 65307)
-	{
-		ft_printf("Event: Pressed key %d (ESC)\n", keysym);//
-		mlx_destroy_image(fdf->mlx_ptr, fdf->img);
-		mlx_destroy_window(fdf->mlx_ptr, fdf->mlx_window);
-		mlx_destroy_display(fdf->mlx_ptr);
-		free(fdf->mlx_ptr);
-		exit(0);
-	}
-	else
-		f(keysym, fdf);
-	return (0);
+	int	offset;
+
+	if ((x < 0) || (x >= fdf->win_width) || (y < 0) | (y >= fdf->win_height))
+		return ;
+	offset = (fdf->line_length * y) + (x * (fdf->bits_per_pixel / 8));
+	*((unsigned int *)(fdf->addr + offset)) = color;
 }
 
 int	encode_rgb(unsigned char red, unsigned char green, unsigned char blue)
@@ -546,99 +567,4 @@ void	color_screen(t_fdf *fdf, int color)
 		}
 		y++;
 	}
-}
-
-void	f(int keysym, t_fdf *fdf)
-{
-	ft_printf("Event: Pressed key %d\n", keysym);//
-	if (keysym == 113)
-	{
-		fdf->angle -= 15;
-		if (fdf->angle < 0)
-			fdf->angle += 360;
-		ft_printf("angle: %i\n", fdf->angle);
-		color_screen(fdf, 0);
-	}
-	if (keysym == 114)
-		color_screen(fdf, encode_rgb(255, 0, 0));
-	if (keysym == 103)
-		color_screen(fdf, encode_rgb(0, 255, 0));
-	if (keysym == 98)
-		color_screen(fdf, encode_rgb(0, 0, 255));
-	if (keysym == 112)
-		color_screen(fdf, encode_rgb(0, 0, 0));
-	if (keysym == 109)
-	{
-		fdf->projection = 1;
-		color_screen(fdf, 0);
-	}
-	if (keysym == 121)
-	{
-		fdf->projection = 0;
-		color_screen(fdf, 0);
-	}
-	if (keysym == 100)
-	{
-		fdf->trans_x += 42;
-		color_screen(fdf, 0);
-	}
-	if (keysym == 97)
-	{
-		fdf->trans_x -= 42;
-		color_screen(fdf, 0);
-	}
-	if (keysym == 115)
-	{
-		fdf->trans_y += 42;
-		color_screen(fdf, 0);
-	}
-	if (keysym == 119)
-	{
-		fdf->trans_y -= 42;
-		color_screen(fdf, 0);
-	}
-	if (keysym == 105)
-	{
-		fdf->edge_len += 1;
-		color_screen(fdf, 0);
-	}
-	if (keysym == 111)
-	{
-		fdf->edge_len -= 1;
-		if (fdf->edge_len <= 0)
-			fdf->edge_len = 1;
-		color_screen(fdf, 0);
-	}
-	if (keysym == 59)
-	{
-		fdf->edge_len += 42;
-		color_screen(fdf, 0);
-	}
-	if (keysym == 39)
-	{
-		fdf->edge_len -= 42;
-		if (fdf->edge_len <= 0)
-			fdf->edge_len = 1;
-		color_screen(fdf, 0);
-	}
-	if (keysym == 101)
-	{
-		fdf->angle += 15;
-		if (fdf->angle >= 360)
-			fdf->angle = 0;
-		ft_printf("angle: %i\n", fdf->angle);
-		color_screen(fdf, 0);
-	}
-	draw_map(fdf);
-	mlx_put_image_to_window(fdf->mlx_ptr, fdf->mlx_window, fdf->img, 0, 0);
-}
-
-void	our_pixel_put(t_fdf *fdf, int x, int y, int color)
-{
-	int	offset;
-
-	if ((x < 0) || (x >= fdf->win_width) || (y < 0) | (y >= fdf->win_height))
-		return ;
-	offset = (fdf->line_length * y) + (x * (fdf->bits_per_pixel / 8));
-	*((unsigned int *)(fdf->addr + offset)) = color;
 }

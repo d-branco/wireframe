@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 08:19:06 by abessa-m          #+#    #+#              #
-#    Updated: 2025/02/15 11:11:59 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/02/15 19:34:07 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,8 @@ SRCS		= \
 	fdf-map.c fdf-line.c fdf-draw.c 
 OBJS		= $(SRCS:.c=.o)
 SRCS-BONUS	= \
-	fdf_bonus.c
+	fdf_bonus.c \
+	fdf-key-input_bonus.c 
 OBJS-BONUS	= $(SRCS-BONUS:.c=.o)
 ##################################################################### Targets  #
 all: $(LIBFT) $(NAME)
