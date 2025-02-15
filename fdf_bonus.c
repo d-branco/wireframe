@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:38:36 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/15 11:44:04 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/15 18:37:28 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,9 +67,9 @@ void	projection_isometric(t_fdf *fdf)
 	int	x;
 
 	fdf->center_x = fdf->trans_x + (fdf->win_width / 2)
-		- ((fdf->edge_len * (fdf->map_length / 2)) * cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * (fdf->map_width / 2)) * sin(((fdf->angle + 30) * M_PI) / 180));
+		- ((fdf->edge_len * fdf->map_length / 2) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * fdf->map_width / 2) * sin(((fdf->angle + 30) * M_PI) / 180));
 	fdf->center_y = fdf->trans_y + (fdf->win_height / 2)
-		+ ((fdf->edge_len * (fdf->map_length / 2)) * sin(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * (fdf->map_width / 2)) * cos(((fdf->angle + 30) * M_PI) / 180));
+		- (+ (fdf->edge_len * fdf->map_length / 2) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * fdf->map_width / 2) * cos(((fdf->angle + 30) * M_PI) / 180));
 	y = 0;
 	while (y < fdf->map_width)
 	{
@@ -90,22 +90,26 @@ void	draw__lines_isometric_projection(t_fdf *fdf, int y, int x)
 
 	if (x < fdf->map_length - 1)
 	{
-		start = (t_point){(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * sin(((fdf->angle + 30) * M_PI) / 180),
-			(fdf->center_y) - (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle + 30) * M_PI) / 180) - (zz(fdf, y, x) / 8),
+		start = (t_point){
+			(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y) * sin(((fdf->angle + 30) * M_PI) / 180),
+			(fdf->center_y) + (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle + 30) * M_PI) / 180) - ((zz(fdf, y, x) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
 			zz(fdf, y, x)};
-		end = (t_point){(fdf->center_x) + (fdf->edge_len * (x + 1)) * cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * sin(((fdf->angle + 30) * M_PI) / 180),
-			(fdf->center_y) - (fdf->edge_len * (x + 1)) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle + 30) * M_PI) / 180) - (zz(fdf, y, x + 1) / 8),
+		end = (t_point){
+			(fdf->center_x) + (fdf->edge_len * (x + 1)) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y) * sin(((fdf->angle + 30) * M_PI) / 180),
+			(fdf->center_y) + (fdf->edge_len * (x + 1)) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle + 30) * M_PI) / 180) - ((zz(fdf, y, x + 1) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
 			zz(fdf, y, x + 1)};
 		if ((start.x != end.x) || (start.y != end.y))
 			draw_point_to_point(fdf, start, end);
 	}
 	if (y < fdf->map_width - 1)
 	{
-		start = (t_point){(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * sin(((fdf->angle + 30) * M_PI) / 180),
-			(fdf->center_y) - (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle + 30) * M_PI) / 180) - (zz(fdf, y, x) / 8),
+		start = (t_point){
+			(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y) * sin(((fdf->angle + 30) * M_PI) / 180),
+			(fdf->center_y) + (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle + 30) * M_PI) / 180) - ((zz(fdf, y, x) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
 			zz(fdf, y, x)};
-		end = (t_point){(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * (y + 1)) * sin(((fdf->angle + 30) * M_PI) / 180),
-			(fdf->center_y) - (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * (y + 1)) * cos(((fdf->angle + 30) * M_PI) / 180) - (zz(fdf, y + 1, x) / 8),
+		end = (t_point){
+			(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * (y + 1)) * sin(((fdf->angle + 30) * M_PI) / 180),
+			(fdf->center_y) + (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * (y + 1)) * cos(((fdf->angle + 30) * M_PI) / 180) - ((zz(fdf, y + 1, x) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
 			zz(fdf, y + 1, x)};
 		if ((start.x != end.x) || (start.y != end.y))
 			draw_point_to_point(fdf, start, end);
@@ -114,17 +118,16 @@ void	draw__lines_isometric_projection(t_fdf *fdf, int y, int x)
 
 void	projection_paralel(t_fdf *fdf)
 {
-	
 	int	y;
 	int	x;
 
 	fdf->center_x = fdf->trans_x + (fdf->win_width / 2)
 		- ((fdf->edge_len * fdf->map_length / 2)
 			* cos(((fdf->angle) * M_PI) / 180)
-			+ (fdf->edge_len * fdf->map_width / 2)
+			- (fdf->edge_len * fdf->map_width / 2)
 			* sin(((fdf->angle) * M_PI) / 180));
 	fdf->center_y = fdf->trans_y + (fdf->win_height / 2)
-		- (-(fdf->edge_len * fdf->map_length / 2)
+		- (+(fdf->edge_len * fdf->map_length / 2)
 			* sin(((fdf->angle) * M_PI) / 180)
 			+ (fdf->edge_len * fdf->map_width / 2)
 			* cos(((fdf->angle) * M_PI) / 180));
@@ -150,35 +153,27 @@ void	draw_lines_paralel_projection(t_fdf *fdf, int y, int x)
 
 	if (x < fdf->map_length - 1)
 	{
-		start = (t_point){(fdf->center_x) + (fdf->edge_len * x)
-			* cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y)
-			* sin(((fdf->angle) * M_PI) / 180), (fdf->center_y) - (fdf->edge_len
-				* x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y)
-			* cos(((fdf->angle) * M_PI) / 180) - (zz(fdf, y, x) / 8),
+		start = (t_point){
+			(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y) * sin(((fdf->angle) * M_PI) / 180),
+			(fdf->center_y) + (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle) * M_PI) / 180) - ((zz(fdf, y, x) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
 			zz(fdf, y, x)};
-		end = (t_point){(fdf->center_x) + (fdf->edge_len * (x + 1)) * cos(((
-						fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * sin((
-					(fdf->angle) * M_PI) / 180), (fdf->center_y)
-		- (fdf->edge_len * (x + 1)) * sin(((fdf->angle) * M_PI) / 180)
-		+ (fdf->edge_len * y) * cos(((fdf->angle) * M_PI) / 180) - (
-				zz(fdf, y, x + 1) / 8), zz(fdf, y, x + 1)};
+		end = (t_point){
+			(fdf->center_x) + (fdf->edge_len * (x + 1)) * cos((( fdf->angle) * M_PI) / 180) - (fdf->edge_len * y) * sin(( (fdf->angle) * M_PI) / 180),
+			(fdf->center_y) + (fdf->edge_len * (x + 1)) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle) * M_PI) / 180) - ((zz(fdf, y, x + 1) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
+			zz(fdf, y, x + 1)};
 		if ((start.x != end.x) || (start.y != end.y))
 			draw_point_to_point(fdf, start, end);
 	}
 	if (y < fdf->map_width - 1)
 	{
-		start = (t_point){(fdf->center_x) + (fdf->edge_len * x)
-			* cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y)
-			* sin(((fdf->angle) * M_PI) / 180), (fdf->center_y)
-			- (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180)
-			+ (fdf->edge_len * y) * cos(((fdf->angle) * M_PI) / 180)
-			- (zz(fdf, y, x) / 8), zz(fdf, y, x)};
-		end = (t_point){(fdf->center_x) + (fdf->edge_len * x)
-			* cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * (y + 1))
-			* sin(((fdf->angle) * M_PI) / 180), (fdf->center_y)
-			- (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180)
-			+ (fdf->edge_len * (y + 1)) * cos(((fdf->angle) * M_PI) / 180)
-			- (zz(fdf, y + 1, x) / 8), zz(fdf, y + 1, x)};
+		start = (t_point){
+			(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * y) * sin(((fdf->angle) * M_PI) / 180),
+			(fdf->center_y) + (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * y) * cos(((fdf->angle) * M_PI) / 180) - ((zz(fdf, y, x) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
+			zz(fdf, y, x)};
+		end = (t_point){
+			(fdf->center_x) + (fdf->edge_len * x) * cos(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * (y + 1)) * sin(((fdf->angle) * M_PI) / 180),
+			(fdf->center_y) + (fdf->edge_len * x) * sin(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * (y + 1)) * cos(((fdf->angle) * M_PI) / 180) - ((zz(fdf, y + 1, x) * sin(M_PI / 6) * (fdf->edge_len * 2) / 255)),
+			zz(fdf, y + 1, x)};
 		if ((start.x != end.x) || (start.y != end.y))
 			draw_point_to_point(fdf, start, end);
 	}
@@ -198,11 +193,13 @@ int	zz(t_fdf *fdf, int y, int x)
 	return (zz);
 }
 
+/*
+*/
 void	draw_center(t_fdf *fdf)
 {
 	t_point	start;
 	t_point	end;
-
+	
 	start = (t_point)
 	{(int)((fdf->win_width / 2) - 5), (int)(fdf->win_height / 2), 0};
 	end = (t_point)
@@ -370,7 +367,8 @@ void	map_initialize(t_fdf *fdf, char *map_name)
 	fdf->trans_x = 0;
 	fdf->trans_y = 0;
 	fdf->projection = 0;
-	fdf->edge_len = (int)(fdf->win_width / ((fdf->map_length + 2) * cos(M_PI / 6) + (fdf->map_width + 2) * sin(M_PI / 6)));
+	fdf->edge_len = (int)(fdf->win_width / ((fdf->map_length + 2)
+				* cos(M_PI / 6) + (fdf->map_width + 2) * sin(M_PI / 6)));
 }
 
 void	map_the_map(t_fdf *fdf, char *map_file)
