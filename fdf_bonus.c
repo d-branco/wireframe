@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/14 08:38:36 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/15 09:42:02 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/15 11:00:41 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,16 @@ int	main(int argc, char **argv)
 	fdf.win_height = 1080 - 40;
 	mlx_initialize(&fdf);
 	map_initialize(&fdf, argv[1]);
-	draw_center(&fdf);
+	draw_center(&fdf);//
 	hook_n_loop(&fdf);
 }
 
 void	draw_map(t_fdf *fdf)
 {
-	projection_isometric(fdf);
-	//projection_paralel(fdf);
+	if (fdf->projection == 0)
+		projection_isometric(fdf);
+	else if (fdf->projection == 1)
+		projection_paralel(fdf);
 }
 
 void	projection_isometric(t_fdf *fdf)
@@ -64,8 +66,10 @@ void	projection_isometric(t_fdf *fdf)
 	int	y;
 	int	x;
 
-	fdf->center_x = fdf->trans_x + (fdf->win_width / 2);
-	fdf->center_y = fdf->trans_y + (fdf->win_height / 2);
+	fdf->center_x = fdf->trans_x + (fdf->win_width / 2)
+		- ((fdf->edge_len * (fdf->map_length / 2)) * cos(((fdf->angle) * M_PI) / 180) + (fdf->edge_len * (fdf->map_width / 2)) * sin(((fdf->angle + 30) * M_PI) / 180));
+	fdf->center_y = fdf->trans_y + (fdf->win_height / 2)
+		+ ((fdf->edge_len * (fdf->map_length / 2)) * sin(((fdf->angle) * M_PI) / 180) - (fdf->edge_len * (fdf->map_width / 2)) * cos(((fdf->angle + 30) * M_PI) / 180));
 	y = 0;
 	while (y < fdf->map_width)
 	{
@@ -370,6 +374,7 @@ void	map_initialize(t_fdf *fdf, char *map_name)
 	fdf->center_y = fdf->win_height / 2;
 	fdf->trans_x = 0;
 	fdf->trans_y = 0;
+	fdf->projection = 0;
 }
 
 void	map_the_map(t_fdf *fdf, char *map_file)
@@ -568,6 +573,16 @@ void	f(int keysym, t_fdf *fdf)
 		color_screen(fdf, encode_rgb(0, 0, 255));
 	if (keysym == 112)
 		color_screen(fdf, encode_rgb(0, 0, 0));
+	if (keysym == 109)
+	{
+		fdf->projection = 1;
+		color_screen(fdf, 0);
+	}
+	if (keysym == 121)
+	{
+		fdf->projection = 0;
+		color_screen(fdf, 0);
+	}
 	if (keysym == 100)
 	{
 		fdf->trans_x += 42;
