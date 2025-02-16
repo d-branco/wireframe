@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 08:19:06 by abessa-m          #+#    #+#              #
-#    Updated: 2025/02/16 16:49:36 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/02/16 16:56:08 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ NAME		:= fdf
 LIBFT		:= libft/libft.a mlx_linux/libmlx_Linux.a
 ##################################################################### Compiler #
 CC			:= cc
-CFLAGS		:= -Wall -Wextra -Werror -g
+CFLAGS		:= -g -Wall -Wextra -Werror
 MLXFLAGS	:= \
 	-Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lmlx -lXext -lX11 -lm -lz
 ########################################################### Intermidiate steps #
