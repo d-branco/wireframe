@@ -6,7 +6,7 @@
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/02/15 21:20:49 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/15 21:36:22 by abessa-m         ###   ########.fr       */
+/*   Updated: 2025/02/16 16:51:31 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,6 @@ int	paint_zz(int green)
 		green = 255;
 	green = green / 2 + 127;
 	red = 255 - green;
-	green = green;
 	blue = 255 - green;
 	return ((red << 16) | (green << 8) | blue);
 }

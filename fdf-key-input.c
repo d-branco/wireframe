@@ -16,13 +16,7 @@
 int	handle_input(int keysym, t_fdf *fdf)
 {
 	if (keysym == 65307)
-	{
-		mlx_destroy_image(fdf->mlx_ptr, fdf->img);
-		mlx_destroy_window(fdf->mlx_ptr, fdf->mlx_window);
-		mlx_destroy_display(fdf->mlx_ptr);
-		free(fdf->mlx_ptr);
-		exit(0);
-	}
+		close_window(fdf);
 	else
 		redraw_map(keysym, fdf);
 	return (0);

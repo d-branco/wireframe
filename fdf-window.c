@@ -47,10 +47,16 @@ void	mlx_initialize(t_fdf *fdf)
 int	close_window(void *param)
 {
 	t_fdf	*fdf;
+	int		i;
 
 	fdf = (t_fdf *)param;
+	i = 0;
+	while (i < fdf->map_width)
+		free(fdf->map[i++]);
+	free(fdf->map);
 	mlx_destroy_image(fdf->mlx_ptr, fdf->img);
 	mlx_destroy_window(fdf->mlx_ptr, fdf->mlx_window);
+	mlx_destroy_display(fdf->mlx_ptr);
 	free(fdf->mlx_ptr);
 	exit(0);
 }
