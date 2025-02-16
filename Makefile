@@ -6,7 +6,7 @@
 #    By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/02/10 08:19:06 by abessa-m          #+#    #+#              #
-#    Updated: 2025/02/15 21:37:18 by abessa-m         ###   ########.fr        #
+#    Updated: 2025/02/16 09:36:55 by abessa-m         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -31,7 +31,11 @@ SRCS		= \
 	fdf-isometric.c fdf-military.c 
 OBJS		= $(SRCS:.c=.o)
 SRCS-BONUS	= \
-	
+	fdf_bonus.c \
+	fdf-init-map_bonus.c fdf-init-validation_bonus.c \
+	fdf-window_bonus.c fdf-key-input_bonus.c \
+	fdf-color_bonus.c fdf-draw_bonus.c \
+	fdf-isometric_bonus.c fdf-military_bonus.c 
 OBJS-BONUS	= $(SRCS-BONUS:.c=.o)
 ###################################################################### Targets #
 all: $(LIBFT) $(NAME)
@@ -48,7 +52,7 @@ $(LIBFT):
 	&& make --no-print-directory -C mlx_linux/ 
 
 bonus: $(OBJS-BONUS) $(LIBFT)
-	@$(CC) $(CFLAGS) $(OBJS) $(OBJS-BONUS) $(LIBFT) $(MLXFLAGS) -o $(NAME) \
+	@$(CC) $(CFLAGS) $(OBJS-BONUS) $(LIBFT) $(MLXFLAGS) -o $(NAME) \
 	&& echo "$(GRAY)Compiled:$(COR) $(OBJS-BONUS)"
 
 clean:
