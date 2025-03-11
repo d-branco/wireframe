@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf-init-validation.c                              :+:      :+:    :+:   */
+/*   fdf-init-validation_bonus.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/15 21:20:07 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/15 21:29:21 by abessa-m         ###   ########.fr       */
+/*   Created: 2025/02/16 09:33:43 by abessa-m          #+#    #+#             */
+/*   Updated: 2025/02/16 09:33:48 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "fdf_bonus.h"
 
 int	input_validation(int argc, char **argv)
 {

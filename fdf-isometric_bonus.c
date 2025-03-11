@@ -1,16 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf-isometric.c                                    :+:      :+:    :+:   */
+/*   fdf-isometric_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/15 21:21:31 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/15 21:35:33 by abessa-m         ###   ########.fr       */
+/*   Created: 2025/02/16 09:34:19 by abessa-m          #+#    #+#             */
+/*   Updated: 2025/02/16 09:34:21 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "fdf_bonus.h"
 
 void	projection_isometric(t_fdf *fdf)
 {

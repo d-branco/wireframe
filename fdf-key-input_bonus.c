@@ -1,22 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fdf-key-input.c                                    :+:      :+:    :+:   */
+/*   fdf-key-input_bonus.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: abessa-m <abessa-m@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/02/15 19:12:50 by abessa-m          #+#    #+#             */
-/*   Updated: 2025/02/15 21:09:52 by abessa-m         ###   ########.fr       */
+/*   Created: 2025/02/16 09:34:36 by abessa-m          #+#    #+#             */
+/*   Updated: 2025/02/16 09:34:40 by abessa-m         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "fdf.h"
+#include "fdf_bonus.h"
 
 //ft_printf("Event: Pressed key %d (ESC)\n", keysym);
 int	handle_input(int keysym, t_fdf *fdf)
 {
 	if (keysym == 65307)
-		close_window(fdf);
+	{
+		mlx_destroy_image(fdf->mlx_ptr, fdf->img);
+		mlx_destroy_window(fdf->mlx_ptr, fdf->mlx_window);
+		mlx_destroy_display(fdf->mlx_ptr);
+		free(fdf->mlx_ptr);
+		exit(0);
+	}
 	else
 		redraw_map(keysym, fdf);
 	return (0);
